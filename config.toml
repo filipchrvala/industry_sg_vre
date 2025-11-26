@@ -1,0 +1,5 @@
+[repository]
+REGISTRY_NAME = "scditech"
+REPOSITORY_NAME = "sgridchsvit-domino-pieces"
+REPOSITORY_LABEL = "SmartGrid Chemosvit Pilot Project"
+VERSION = "0.1.0"
