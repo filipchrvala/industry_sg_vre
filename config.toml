@@ -1,5 +1,5 @@
 [repository]
 REGISTRY_NAME = "scditech"
-REPOSITORY_NAME = "Industry_SG_vRE"
+REPOSITORY_NAME = "industry_sg_vre"
 REPOSITORY_LABEL = "Industry Smart grid virtual RE"
 VERSION = "0.1.0"
