@@ -61,5 +61,81 @@
         },
         "secrets_schema": null,
         "source_url": "https://github.com/filipchrvala/industry_sg_vre/tree/main/pieces/ExampleSleepPiece"
+    },
+    "FetchSolargisDataPiece": {
+        "name": "FetchSolargisDataPiece",
+        "dependency": {
+            "dockerfile": null,
+            "requirements_file": "requirements_0.txt"
+        },
+        "tags": [
+            "Solargis"
+        ],
+        "style": {
+            "node_label": "Fetch Solargis Data Piece",
+            "node_type": "default",
+            "node_style": {
+                "backgroundColor": "#ebebeb"
+            },
+            "useIcon": true,
+            "icon_class_name": "fa-solid:database",
+            "iconStyle": {
+                "cursor": "pointer"
+            }
+        },
+        "description": "Downloads Solargis data",
+        "dependencies_group": "0",
+        "container_resources": {
+            "requests": {
+                "cpu": 100,
+                "memory": 128
+            },
+            "limits": {
+                "cpu": 500,
+                "memory": 512
+            }
+        },
+        "input_schema": {
+            "description": "Fetch Solargis Data Piece Input Model",
+            "properties": {
+                "input_path": {
+                    "default": "/home/shared_storage/input_data/InputSolargisFile.csv",
+                    "description": "The path to input meteo data files (supports wildcards: *.docx, *.csv, or directory paths)",
+                    "title": "Path to input data files",
+                    "type": "string"
+                },
+                "input_filetype": {
+                    "default": "csv",
+                    "description": "The type of input file: 'docx' for Word documents or 'csv' for CSV files",
+                    "title": "Input file type",
+                    "type": "string"
+                }
+            },
+            "title": "InputModel",
+            "type": "object"
+        },
+        "output_schema": {
+            "description": "Fetch Solargis Data Piece Output Model",
+            "properties": {
+                "message": {
+                    "default": "",
+                    "description": "Output message to log",
+                    "title": "Message",
+                    "type": "string"
+                },
+                "file_path": {
+                    "description": "The path to the output CSV file",
+                    "title": "File Path",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "file_path"
+            ],
+            "title": "OutputModel",
+            "type": "object"
+        },
+        "secrets_schema": null,
+        "source_url": "https://github.com/filipchrvala/industry_sg_vre/tree/main/pieces/FetchSolargisDataPiece"
     }
 }
