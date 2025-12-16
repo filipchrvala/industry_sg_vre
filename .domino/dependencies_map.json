@@ -8,6 +8,6 @@
             "ExampleSleepPiece"
         ],
         "secrets": [],
-        "source_image": "ghcr.io/scditech/sgridchsvit-domino-pieces:0.1.0-group0"
+        "source_image": "ghcr.io/scditech/industry_sg_vre:0.1.0-group0"
     }
 }

@@ -60,6 +60,6 @@
             "type": "object"
         },
         "secrets_schema": null,
-        "source_url": "https://github.com/scditech/sgridchsvit-domino-pieces/tree/main/pieces/ExampleSleepPiece"
+        "source_url": "https://github.com/scditech/industry_sg_vre/tree/main/pieces/ExampleSleepPiece"
     }
 }
