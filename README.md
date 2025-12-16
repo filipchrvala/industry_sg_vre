@@ -1,7 +1,7 @@
-# SmartGrid Chemosvit Pilot Project Domino Pieces Repositiry
+# Industry Smart grid virtual RE Pilot Project Domino Pieces Repositiry
 
-**Owner**: stanovo (SCDI)  
-**Project**: SmartGrid Chemosvit Pilot Project  
+**Owner**: scditech (SCDI)  
+**Project**: Industry Smart grid virtual RE
 
 ## Structure
 - `pieces/`: Domino Pieces
