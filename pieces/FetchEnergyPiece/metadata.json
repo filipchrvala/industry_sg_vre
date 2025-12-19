@@ -1,5 +1,5 @@
 {
-    "name": "FetchEnergyDataPiece",
+    "name": "FetchEnergyPiece",
     "description": "Loads and merges energy load, production and price CSV files",
     "dependencies_group": "0",
     "dependency": {
