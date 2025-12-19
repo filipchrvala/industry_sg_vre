@@ -5,10 +5,11 @@
             "requirements_file": "requirements_0.txt"
         },
         "pieces": [
+            "FetchEnergyPiece",
             "ExampleSleepPiece",
             "FetchSolargisDataPiece"
         ],
         "secrets": [],
-        "source_image": "ghcr.io/scditech/industry_sg_vre:0.1.2-group0"
+        "source_image": "ghcr.io/scditech/industry_sg_vre:0.1.4-group0"
     }
 }

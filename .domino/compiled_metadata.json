@@ -1,4 +1,90 @@
 {
+    "FetchEnergyPiece": {
+        "name": "FetchEnergyPiece",
+        "dependency": {
+            "dockerfile": null,
+            "requirements_file": "requirements_0.txt"
+        },
+        "tags": [
+            "Energy",
+            "CSV",
+            "ETL"
+        ],
+        "style": {
+            "node_label": "Fetch Energy Data",
+            "node_type": "default",
+            "node_style": {
+                "backgroundColor": "#ebebeb"
+            },
+            "useIcon": true,
+            "icon_class_name": "fa-solid:database",
+            "iconStyle": {
+                "cursor": "pointer"
+            }
+        },
+        "description": "Loads and merges energy load, production and price CSV files",
+        "dependencies_group": "0",
+        "container_resources": {
+            "requests": {
+                "cpu": 100,
+                "memory": 128
+            },
+            "limits": {
+                "cpu": 500,
+                "memory": 512
+            }
+        },
+        "input_schema": {
+            "description": "Input model for Fetch Energy Data Piece",
+            "properties": {
+                "load_csv": {
+                    "description": "Path to CSV file containing load data with datetime column",
+                    "title": "Load CSV file path",
+                    "type": "string"
+                },
+                "production_csv": {
+                    "description": "Path to CSV file containing production data with datetime column",
+                    "title": "Production CSV file path",
+                    "type": "string"
+                },
+                "prices_csv": {
+                    "description": "Path to CSV file containing price data with datetime column",
+                    "title": "Prices CSV file path",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "load_csv",
+                "production_csv",
+                "prices_csv"
+            ],
+            "title": "InputModel",
+            "type": "object"
+        },
+        "output_schema": {
+            "description": "Output model for Fetch Energy Data Piece",
+            "properties": {
+                "message": {
+                    "description": "Execution result message",
+                    "title": "Message",
+                    "type": "string"
+                },
+                "output_path": {
+                    "description": "Path to merged Parquet file",
+                    "title": "Output Path",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "message",
+                "output_path"
+            ],
+            "title": "OutputModel",
+            "type": "object"
+        },
+        "secrets_schema": null,
+        "source_url": "https://github.com/filipchrvala/industry_sg_vre/tree/main/pieces/FetchEnergyPiece"
+    },
     "ExampleSleepPiece": {
         "name": "ExampleSleepPiece",
         "dependency": {
