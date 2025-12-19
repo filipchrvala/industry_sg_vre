@@ -1,0 +1,11 @@
+{
+  "name": "FetchEnergyDataPiece",
+  "description": "Load and merge energy CSV files",
+  "tags": [
+    "Energy"
+  ],
+  "style": {
+    "node_label": "Fetch Energy Data",
+    "icon_class_name": "fa-solid:bolt"
+  }
+}
