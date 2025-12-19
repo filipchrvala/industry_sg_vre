@@ -10,6 +10,6 @@
             "FetchSolargisDataPiece"
         ],
         "secrets": [],
-        "source_image": "ghcr.io/scditech/industry_sg_vre:0.1.4-group0"
+        "source_image": "ghcr.io/scditech/industry_sg_vre:0.1.5-group0"
     }
 }
