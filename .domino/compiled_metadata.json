@@ -3,13 +3,13 @@
         "name": "FetchEnergyDataPiece",
         "dependency": {
             "dockerfile": null,
-            "requirements_file": null
+            "requirements_file": "requirements_0.txt"
         },
         "tags": [
             "Energy"
         ],
         "style": {
-            "node_label": "Fetch Energy Data",
+            "node_label": "Fetch Energy Data Piece",
             "node_type": "default",
             "node_style": {
                 "backgroundColor": "#ebebeb"
@@ -21,6 +21,17 @@
             }
         },
         "description": "Load and merge energy CSV files",
+        "dependencies_group": "0",
+        "container_resources": {
+            "requests": {
+                "cpu": 100,
+                "memory": 128
+            },
+            "limits": {
+                "cpu": 500,
+                "memory": 512
+            }
+        },
         "input_schema": {
             "description": "Input model for Fetch Energy Data Piece",
             "properties": {

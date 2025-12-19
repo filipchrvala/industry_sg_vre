@@ -2,25 +2,15 @@
     "group0": {
         "dependency": {
             "dockerfile": null,
-            "requirements_file": null
-        },
-        "pieces": [
-            "FetchEnergyDataPiece"
-        ],
-        "secrets": [],
-        "source_image": "ghcr.io/scditech/industry_sg_vre:0.1.9-group0"
-    },
-    "group1": {
-        "dependency": {
-            "dockerfile": null,
             "requirements_file": "requirements_0.txt"
         },
         "pieces": [
+            "FetchEnergyDataPiece",
             "FetchEnergyPiece",
             "ExampleSleepPiece",
             "FetchSolargisDataPiece"
         ],
         "secrets": [],
-        "source_image": "ghcr.io/scditech/industry_sg_vre:0.1.9-group1"
+        "source_image": "ghcr.io/scditech/industry_sg_vre:0.1.10-group0"
     }
 }
