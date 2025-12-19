@@ -1,4 +1,78 @@
 {
+    "PreprocessSolargisPiece": {
+        "name": "PreprocessSolargisPiece",
+        "dependency": {
+            "dockerfile": null,
+            "requirements_file": "requirements_0.txt"
+        },
+        "tags": [
+            "Solargis"
+        ],
+        "style": {
+            "node_label": "Preprocess Solargis Piece",
+            "node_type": "default",
+            "node_style": {
+                "backgroundColor": "#ebebeb"
+            },
+            "useIcon": true,
+            "icon_class_name": "fa-solid:database",
+            "iconStyle": {
+                "cursor": "pointer"
+            }
+        },
+        "description": "Preprocess Solargis data",
+        "dependencies_group": "0",
+        "container_resources": {
+            "requests": {
+                "cpu": 100,
+                "memory": 128
+            },
+            "limits": {
+                "cpu": 500,
+                "memory": 512
+            }
+        },
+        "input_schema": {
+            "description": "Preprocess Solargis Data Piece Input Model",
+            "properties": {
+                "input_path": {
+                    "default": "/home/shared_storage/data/raw_solargis.csv",
+                    "description": "The path to the input Solargis raw data file ",
+                    "title": "Path to raw data file",
+                    "type": "string"
+                }
+            },
+            "title": "InputModel",
+            "type": "object"
+        },
+        "output_schema": {
+            "properties": {
+                "message": {
+                    "default": "",
+                    "description": "Output message to log",
+                    "title": "Message",
+                    "type": "string"
+                },
+                "file_path": {
+                    "description": "The path to the output CSV file",
+                    "title": "File Path",
+                    "type": "string"
+                },
+                "processed_rows": {
+                    "title": "Processed Rows",
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "file_path",
+                "processed_rows"
+            ],
+            "title": "OutputModel",
+            "type": "object"
+        },
+        "secrets_schema": null,
+        "source_url": "https://github.com/filipchrvala/industry_sg_vre/tree/main/pieces/PreprocessSolargisPiece"
+    },
     "FetchEnergyDataPiece": {
         "name": "FetchEnergyDataPiece",
         "dependency": {
