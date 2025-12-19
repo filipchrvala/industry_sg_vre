@@ -1,3 +1,5 @@
+print(">>> FetchEnergyPiece module imported <<<")
+
 from domino.base_piece import BasePiece
 from .models import InputModel, OutputModel
 import pandas as pd
