@@ -1,27 +1,26 @@
 {
-    "name": "FetchEnergyPiece",
-    "description": "Loads and merges energy load, production and price CSV files",
-    "dependencies_group": "0",
-    "dependency": {
-        "requirements_file": "requirements_0.txt"
+  "name": "Fetch Energy Data",
+  "description": "Load and merge energy CSV files",
+  "inputs": {
+    "load_csv": {
+      "type": "string",
+      "description": "Path to load CSV"
     },
-    "container_resources": {
-        "requests": {
-            "cpu": 100,
-            "memory": 128
-        },
-        "limits": {
-            "cpu": 500,
-            "memory": 512
-        }
+    "production_csv": {
+      "type": "string",
+      "description": "Path to production CSV"
     },
-    "tags": [
-        "Energy",
-        "CSV",
-        "ETL"
-    ],
-    "style": {
-        "node_label": "Fetch Energy Data",
-        "icon_class_name": "fa-solid:database"
+    "prices_csv": {
+      "type": "string",
+      "description": "Path to prices CSV"
     }
+  },
+  "outputs": {
+    "message": {
+      "type": "string"
+    },
+    "output_path": {
+      "type": "string"
+    }
+  }
 }
