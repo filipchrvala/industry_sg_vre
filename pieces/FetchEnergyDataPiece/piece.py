@@ -10,6 +10,7 @@ class FetchEnergyDataPiece(BasePiece):
     """
 
     def piece_function(self, input_data):
+        # ---- START ----
         print("[INFO] FetchEnergyDataPiece started")
 
         print(f"[INFO] Load CSV: {input_data.load_csv}")
@@ -20,18 +21,24 @@ class FetchEnergyDataPiece(BasePiece):
         production_csv = Path(input_data.production_csv)
         prices_csv = Path(input_data.prices_csv)
 
+        # ---- VALIDATE INPUT FILES ----
         for f in [load_csv, production_csv, prices_csv]:
             if not f.exists():
                 message = f"File not found: {f}"
                 print(f"[ERROR] {message}")
-                return OutputModel(message=message, output_path="")
+                return {
+                    "message": message,
+                    "output_path": ""
+                }
 
+        # ---- READ DATA ----
         print("[INFO] Reading CSV files")
 
         load_df = pd.read_csv(load_csv, parse_dates=["datetime"])
         production_df = pd.read_csv(production_csv, parse_dates=["datetime"])
         prices_df = pd.read_csv(prices_csv, parse_dates=["datetime"])
 
+        # ---- MERGE ----
         print("[INFO] Merging data")
 
         load_df = load_df.set_index("datetime")
@@ -51,18 +58,21 @@ class FetchEnergyDataPiece(BasePiece):
         if "price_eur_mwh" in merged_df.columns:
             merged_df["price_eur_mwh"] = merged_df["price_eur_mwh"].ffill()
 
+        # ---- SAVE OUTPUT ----
         output_path = Path(self.results_path) / "merged_energy_data.parquet"
         merged_df.to_parquet(output_path, index=False)
 
         print(f"[SUCCESS] Data merged, rows: {len(merged_df)}")
         print(f"[SUCCESS] Output written to {output_path}")
 
+        # ---- DOMINO UI OUTPUT ----
         self.display_result = {
             "file_type": "parquet",
             "file_path": str(output_path)
         }
 
-        return OutputModel(
-            message=f"Data merged successfully ({len(merged_df)} rows)",
-            output_path=str(output_path)
-        )
+        # ---- RETURN PLAIN DICT (CRITICAL) ----
+        return {
+            "message": f"Data merged successfully ({len(merged_df)} rows)",
+            "output_path": str(output_path)
+        }
