@@ -1,44 +1,104 @@
 {
-    "FetchEnergyPiece": {
-        "name": "FetchEnergyPiece",
+    "FetchEnergyDataPiece": {
+        "name": "FetchEnergyDataPiece",
         "dependency": {
             "dockerfile": null,
             "requirements_file": null
         },
-        "tags": [],
+        "tags": [
+            "Energy"
+        ],
         "style": {
-            "node_label": "Piece",
+            "node_label": "Fetch Energy Data",
             "node_type": "default",
             "node_style": {
                 "backgroundColor": "#ebebeb"
             },
             "useIcon": true,
-            "icon_class_name": "fa-solid fa-circle",
+            "icon_class_name": "fa-solid:bolt",
             "iconStyle": {
                 "cursor": "pointer"
             }
         },
         "description": "Load and merge energy CSV files",
-        "inputs": {
-            "load_csv": {
-                "type": "string",
-                "description": "Path to load CSV"
+        "input_schema": {
+            "description": "Input model for Fetch Energy Data Piece",
+            "properties": {
+                "load_csv": {
+                    "default": "/home/shared_storage/load.csv",
+                    "description": "Path to load CSV file",
+                    "title": "Load Csv",
+                    "type": "string"
+                },
+                "production_csv": {
+                    "default": "/home/shared_storage/production.csv",
+                    "description": "Path to production CSV file",
+                    "title": "Production Csv",
+                    "type": "string"
+                },
+                "prices_csv": {
+                    "default": "/home/shared_storage/prices.csv",
+                    "description": "Path to prices CSV file",
+                    "title": "Prices Csv",
+                    "type": "string"
+                }
             },
-            "production_csv": {
-                "type": "string",
-                "description": "Path to production CSV"
+            "title": "InputModel",
+            "type": "object"
+        },
+        "output_schema": {
+            "description": "Output model for Fetch Energy Data Piece",
+            "properties": {
+                "message": {
+                    "default": "",
+                    "title": "Message",
+                    "type": "string"
+                },
+                "output_path": {
+                    "default": "",
+                    "title": "Output Path",
+                    "type": "string"
+                }
             },
-            "prices_csv": {
-                "type": "string",
-                "description": "Path to prices CSV"
+            "title": "OutputModel",
+            "type": "object"
+        },
+        "secrets_schema": null,
+        "source_url": "https://github.com/filipchrvala/industry_sg_vre/tree/main/pieces/FetchEnergyDataPiece"
+    },
+    "FetchEnergyPiece": {
+        "name": "FetchEnergyPiece",
+        "dependency": {
+            "dockerfile": null,
+            "requirements_file": "requirements_0.txt"
+        },
+        "tags": [
+            "Energy",
+            "CSV",
+            "ETL"
+        ],
+        "style": {
+            "node_label": "Fetch Energy Data",
+            "node_type": "default",
+            "node_style": {
+                "backgroundColor": "#ebebeb"
+            },
+            "useIcon": true,
+            "icon_class_name": "fa-solid:database",
+            "iconStyle": {
+                "cursor": "pointer"
             }
         },
-        "outputs": {
-            "message": {
-                "type": "string"
+        "description": "Loads and merges energy load, production and price CSV files",
+        "dependencies_group": "0",
+        "container_resources": {
+            "requests": {
+                "cpu": 100,
+                "memory": 128
             },
-            "output_path": {
-                "type": "string"
+            "limits": {
+                "cpu": 500,
+                "memory": 512
             }
         },
         "input_schema": {
