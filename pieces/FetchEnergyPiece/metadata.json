@@ -1,5 +1,5 @@
 {
-  "name": "Fetch Energy Data",
+  "name": "FetchEnergyPiece",
   "description": "Load and merge energy CSV files",
   "inputs": {
     "load_csv": {
