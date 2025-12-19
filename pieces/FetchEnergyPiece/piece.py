@@ -4,7 +4,7 @@ import pandas as pd
 from pathlib import Path
 
 
-class FetchEnergyDataPiece(BasePiece):
+class FetchEnergyPiece(BasePiece):
     """
     Domino piece responsible for:
     - loading 3 CSV files (load, production, prices)
