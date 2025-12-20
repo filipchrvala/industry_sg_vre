@@ -20,21 +20,19 @@ class TrainModelPiece(BasePiece):
         if not train_path.exists():
             raise FileNotFoundError(f"Training file not found: {train_path}")
 
-        # -------- LOAD DATA --------
+        # ---- LOAD DATA ----
         df = pd.read_parquet(train_path)
 
         if "datetime" in df.columns:
             df = df.drop(columns=["datetime"])
 
-        # posledný stĺpec berieme ako target
         X = df.iloc[:, :-1]
         y = df.iloc[:, -1]
 
-        print(f"[INFO] Training rows: {len(df)}")
+        print(f"[INFO] Rows: {len(df)}")
         print(f"[INFO] Features: {list(X.columns)}")
-        print(f"[INFO] Target: {df.columns[-1]}")
 
-        # -------- TRAIN MODEL --------
+        # ---- TRAIN MODEL ----
         model = xgb.XGBRegressor(
             n_estimators=100,
             max_depth=6,
@@ -45,14 +43,13 @@ class TrainModelPiece(BasePiece):
 
         model.fit(X, y)
 
-        # -------- SAVE MODEL --------
+        # ---- SAVE MODEL ----
         model_path = Path(self.results_path) / "xgboost_energy_model.joblib"
         joblib.dump(model, model_path)
 
-        print("[SUCCESS] Model training finished")
         print(f"[SUCCESS] Model saved to {model_path}")
 
-        # POVINNÉ PRE DOMINO UI
+        # POVINNÉ PRE DOMINO
         self.display_result = {
             "file_type": "model",
             "file_path": str(model_path)
