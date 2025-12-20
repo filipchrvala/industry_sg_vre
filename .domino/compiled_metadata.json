@@ -1,4 +1,88 @@
 {
+    "PreprocessEnergyDataPiece": {
+        "name": "PreprocessEnergyDataPiece",
+        "dependency": {
+            "dockerfile": null,
+            "requirements_file": "requirements_0.txt"
+        },
+        "tags": [
+            "Energy",
+            "Preprocessing"
+        ],
+        "style": {
+            "node_label": "Preprocess Energy Data",
+            "node_type": "default",
+            "node_style": {
+                "backgroundColor": "#ebebeb"
+            },
+            "useIcon": true,
+            "icon_class_name": "fa-solid:filter",
+            "iconStyle": {
+                "cursor": "pointer"
+            }
+        },
+        "description": "Clean, resample and prepare energy data for training and prediction",
+        "dependencies_group": "0",
+        "container_resources": {
+            "requests": {
+                "cpu": 200,
+                "memory": 256
+            },
+            "limits": {
+                "cpu": 500,
+                "memory": 512
+            }
+        },
+        "input_schema": {
+            "properties": {
+                "input_path": {
+                    "default": "/home/shared_storage/data/merged_energy_data.parquet",
+                    "description": "Path to raw merged CSV or Parquet file",
+                    "title": "Input Path",
+                    "type": "string"
+                },
+                "train_output_path": {
+                    "default": "/home/shared_storage/data/train_features_15min.parquet",
+                    "description": "Output Parquet for model training",
+                    "title": "Train Output Path",
+                    "type": "string"
+                },
+                "predict_output_path": {
+                    "default": "/home/shared_storage/data/predict_features_daily.parquet",
+                    "description": "Output Parquet for daily load forecast",
+                    "title": "Predict Output Path",
+                    "type": "string"
+                }
+            },
+            "title": "InputModel",
+            "type": "object"
+        },
+        "output_schema": {
+            "properties": {
+                "message": {
+                    "default": "",
+                    "title": "Message",
+                    "type": "string"
+                },
+                "train_file_path": {
+                    "title": "Train File Path",
+                    "type": "string"
+                },
+                "predict_file_path": {
+                    "title": "Predict File Path",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "train_file_path",
+                "predict_file_path"
+            ],
+            "title": "OutputModel",
+            "type": "object"
+        },
+        "secrets_schema": null,
+        "source_url": "https://github.com/filipchrvala/industry_sg_vre/tree/main/pieces/PreprocessEnergyDataPiece"
+    },
     "FetchEnergyDataPiece": {
         "name": "FetchEnergyDataPiece",
         "dependency": {
