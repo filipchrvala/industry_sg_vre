@@ -22,7 +22,7 @@
         "input_schema": {
             "properties": {
                 "train_file_path": {
-                    "description": "Path to training dataset parquet (1min resolution)",
+                    "description": "Path to training dataset parquet",
                     "title": "Train File Path",
                     "type": "string"
                 }
