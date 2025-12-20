@@ -36,7 +36,7 @@
         "input_schema": {
             "properties": {
                 "input_path": {
-                    "description": "Path to merged energy data from FetchEnergyDataPiece",
+                    "description": "Path to merged energy parquet file",
                     "title": "Input Path",
                     "type": "string"
                 }
