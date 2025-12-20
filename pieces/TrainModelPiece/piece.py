@@ -6,13 +6,13 @@ import xgboost as xgb
 import joblib
 
 
-class TrainEnergyModelPiece(BasePiece):
+class TrainModelPiece(BasePiece):
     """
     Train XGBoost model on preprocessed energy data
     """
 
     def piece_function(self, input_data: InputModel) -> OutputModel:
-        print("[INFO] TrainEnergyModelPiece started")
+        print("[INFO] TrainModelPiece started")
 
         train_path = Path(input_data.train_file_path)
         print(f"[INFO] Using training file: {train_path}")
