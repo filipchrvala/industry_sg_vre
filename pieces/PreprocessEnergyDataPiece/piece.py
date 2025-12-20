@@ -20,22 +20,22 @@ class PreprocessEnergyDataPiece(BasePiece):
 
         df = pd.read_parquet(input_path)
 
-        # ---------- BASIC CLEAN ----------
+        # -------- BASIC CLEAN --------
         df["datetime"] = pd.to_datetime(df["datetime"])
         df = df.drop_duplicates(subset=["datetime"])
         df = df.sort_values("datetime")
         df = df.set_index("datetime")
 
-        # ---------- RESAMPLE ----------
+        # -------- RESAMPLE --------
         df_1min = df.resample("1min").mean().ffill()
         df_15min = df.resample("15min").mean().ffill()
 
-        # ---------- SAVE ----------
+        # -------- SAVE --------
         train_path = Path(self.results_path) / "train_dataset_1min.parquet"
-        forecast_path = Path(self.results_path) / "forecast_dataset_15min.parquet"
+        predict_path = Path(self.results_path) / "predict_dataset_15min.parquet"
 
         df_1min.reset_index().to_parquet(train_path, index=False)
-        df_15min.reset_index().to_parquet(forecast_path, index=False)
+        df_15min.reset_index().to_parquet(predict_path, index=False)
 
         print("[SUCCESS] Preprocessing finished")
 
@@ -47,6 +47,6 @@ class PreprocessEnergyDataPiece(BasePiece):
 
         return OutputModel(
             message="Preprocessing finished successfully",
-            train_data_path=str(train_path),
-            forecast_data_path=str(forecast_path)
+            train_file_path=str(train_path),
+            predict_file_path=str(predict_path)
         )
