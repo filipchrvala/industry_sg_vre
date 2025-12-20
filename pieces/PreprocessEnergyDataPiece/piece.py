@@ -10,56 +10,45 @@ class PreprocessEnergyDataPiece(BasePiece):
     def piece_function(self, input_data: InputModel):
 
         print("[INFO] PreprocessEnergyDataPiece started")
+        print(f"[INFO] Using input file: {input_data.input_path}")
 
         input_path = Path(input_data.input_path)
-        train_out = Path(input_data.train_output_path)
-        predict_out = Path(input_data.predict_output_path)
 
         if not input_path.exists():
-            message = f"Input file not found: {input_path}"
-            print(f"[ERROR] {message}")
-            return OutputModel(message=message, train_file_path="", predict_file_path="")
+            msg = f"Input file not found: {input_path}"
+            print(f"[ERROR] {msg}")
+            return OutputModel(msg, "", "")
 
-        print(f"[INFO] Loading input data: {input_path}")
+        df = pd.read_parquet(input_path)
 
-        if input_path.suffix == ".csv":
-            df = pd.read_csv(input_path, parse_dates=["datetime"])
-        else:
-            df = pd.read_parquet(input_path)
-
-        print(f"[INFO] Rows loaded: {len(df)}")
-
-        # BASIC CLEAN
-        print("[INFO] Basic cleaning")
-
+        # --- BASIC CLEAN ---
         df["datetime"] = pd.to_datetime(df["datetime"])
         df = df.drop_duplicates(subset=["datetime"])
         df = df.sort_values("datetime")
-
         df = df.set_index("datetime")
+
+        # unify to 1-minute grid
         df = df.resample("1min").mean().ffill()
 
-        print("[INFO] Creating 15-min training data")
-
+        # --- TRAIN DATA (15 min) ---
         train_df = df.resample("15min").mean().reset_index()
         train_df["hour"] = train_df["datetime"].dt.hour
         train_df["day_of_week"] = train_df["datetime"].dt.dayofweek
         train_df["month"] = train_df["datetime"].dt.month
 
         if "load_kw" in train_df.columns:
-            train_df["lag_24h"] = train_df["load_kw"].shift(96)
-            train_df["rolling_4h"] = train_df["load_kw"].rolling(16, min_periods=1).mean()
+            train_df["yesterday_load_kw"] = train_df["load_kw"].shift(96)
+            train_df["rolling_4h"] = train_df["load_kw"].rolling(16).mean()
 
         train_df["sin_hour"] = np.sin(2 * np.pi * train_df["hour"] / 24)
         train_df["cos_hour"] = np.cos(2 * np.pi * train_df["hour"] / 24)
         train_df = train_df.dropna()
 
-        print("[INFO] Creating daily prediction data")
-
+        # --- PREDICT DATA (daily) ---
         predict_df = df.resample("1D").mean().reset_index()
 
-        train_out.parent.mkdir(parents=True, exist_ok=True)
-        predict_out.parent.mkdir(parents=True, exist_ok=True)
+        train_out = Path(self.results_path) / "train_features_15min.parquet"
+        predict_out = Path(self.results_path) / "predict_features_daily.parquet"
 
         train_df.to_parquet(train_out, index=False)
         predict_df.to_parquet(predict_out, index=False)
@@ -72,7 +61,7 @@ class PreprocessEnergyDataPiece(BasePiece):
         }
 
         return OutputModel(
-            message="Preprocessing completed successfully",
-            train_file_path=str(train_out),
-            predict_file_path=str(predict_out)
+            "Preprocessing completed",
+            str(train_out),
+            str(predict_out)
         )
