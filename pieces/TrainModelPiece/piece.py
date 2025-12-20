@@ -27,7 +27,15 @@ class TrainModelPiece(BasePiece):
             df = pd.read_csv(data_path)
 
         # ---- FEATURES / TARGET ----
-        target = "load"
+        target = "load_mw"
+
+        # ---- SAFETY CHECK ----
+        if target not in df.columns:
+            raise ValueError(
+                f"Target column '{target}' not found. "
+                f"Available columns: {df.columns.tolist()}"
+            )
+
         features = [c for c in df.columns if c not in ["datetime", target]]
 
         X = df[features]
