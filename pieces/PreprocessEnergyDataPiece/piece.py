@@ -2,68 +2,51 @@ from domino.base_piece import BasePiece
 from .models import InputModel, OutputModel
 from pathlib import Path
 import pandas as pd
-import numpy as np
 
 
 class PreprocessEnergyDataPiece(BasePiece):
+    """
+    Basic cleaning + resampling of merged energy data
+    """
 
-    def piece_function(self, input_data: InputModel):
-
+    def piece_function(self, input_data: InputModel) -> OutputModel:
         print("[INFO] PreprocessEnergyDataPiece started")
-        print(f"[INFO] Using input file: {input_data.input_path}")
 
         input_path = Path(input_data.input_path)
+        print(f"[INFO] Using input file: {input_path}")
 
         if not input_path.exists():
-            return OutputModel(
-                message=f"Input file not found: {input_path}",
-                train_file_path="",
-                predict_file_path=""
-            )
+            raise FileNotFoundError(f"Input file not found: {input_path}")
 
         df = pd.read_parquet(input_path)
 
-        # -------- BASIC CLEAN --------
+        # ---------- BASIC CLEAN ----------
         df["datetime"] = pd.to_datetime(df["datetime"])
         df = df.drop_duplicates(subset=["datetime"])
         df = df.sort_values("datetime")
         df = df.set_index("datetime")
 
-        # unify to 1-minute grid
-        df = df.resample("1min").mean().ffill()
+        # ---------- RESAMPLE ----------
+        df_1min = df.resample("1min").mean().ffill()
+        df_15min = df.resample("15min").mean().ffill()
 
-        # -------- TRAIN DATA (15 min) --------
-        train_df = df.resample("15min").mean().reset_index()
-        train_df["hour"] = train_df["datetime"].dt.hour
-        train_df["day_of_week"] = train_df["datetime"].dt.dayofweek
-        train_df["month"] = train_df["datetime"].dt.month
+        # ---------- SAVE ----------
+        train_path = Path(self.results_path) / "train_dataset_1min.parquet"
+        forecast_path = Path(self.results_path) / "forecast_dataset_15min.parquet"
 
-        if "load_kw" in train_df.columns:
-            train_df["yesterday_load_kw"] = train_df["load_kw"].shift(96)
-            train_df["rolling_4h"] = train_df["load_kw"].rolling(16).mean()
-
-        train_df["sin_hour"] = np.sin(2 * np.pi * train_df["hour"] / 24)
-        train_df["cos_hour"] = np.cos(2 * np.pi * train_df["hour"] / 24)
-        train_df = train_df.dropna()
-
-        # -------- PREDICT DATA (DAILY) --------
-        predict_df = df.resample("1D").mean().reset_index()
-
-        train_out = Path(self.results_path) / "train_features_15min.parquet"
-        predict_out = Path(self.results_path) / "predict_features_daily.parquet"
-
-        train_df.to_parquet(train_out, index=False)
-        predict_df.to_parquet(predict_out, index=False)
+        df_1min.reset_index().to_parquet(train_path, index=False)
+        df_15min.reset_index().to_parquet(forecast_path, index=False)
 
         print("[SUCCESS] Preprocessing finished")
 
+        # ✅ POVINNÉ PRE DOMINO UI
         self.display_result = {
-            "train_features": str(train_out),
-            "predict_features": str(predict_out),
+            "file_type": "parquet",
+            "file_path": str(train_path)
         }
 
         return OutputModel(
-            message="Preprocessing completed successfully",
-            train_file_path=str(train_out),
-            predict_file_path=str(predict_out),
+            message="Preprocessing finished successfully",
+            train_data_path=str(train_path),
+            forecast_data_path=str(forecast_path)
         )
