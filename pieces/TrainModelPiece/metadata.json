@@ -1,0 +1,9 @@
+{
+  "name": "TrainModelPiece",
+  "description": "Train XGBoost model on preprocessed energy data",
+  "dependencies_group": "0",
+  "style": {
+    "node_label": "Train Energy Model (XGBoost)",
+    "icon_class_name": "fa-solid:chart-line"
+  }
+}
