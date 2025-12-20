@@ -1,4 +1,81 @@
 {
+    "PredictPiece": {
+        "name": "PredictPiece",
+        "dependency": {
+            "dockerfile": null,
+            "requirements_file": null
+        },
+        "tags": [],
+        "style": {
+            "node_label": "Piece",
+            "node_type": "default",
+            "node_style": {
+                "backgroundColor": "#ebebeb"
+            },
+            "useIcon": true,
+            "icon_class_name": "fa-solid fa-circle",
+            "iconStyle": {
+                "cursor": "pointer"
+            }
+        },
+        "label": "Predict Energy Load",
+        "description": "Run XGBoost model to predict energy load on 15-minute data",
+        "version": "0.1.0",
+        "inputs": [
+            {
+                "name": "model_path",
+                "type": "string"
+            },
+            {
+                "name": "data_path",
+                "type": "string"
+            }
+        ],
+        "outputs": [
+            {
+                "name": "prediction_path",
+                "type": "string"
+            }
+        ],
+        "input_schema": {
+            "properties": {
+                "model_path": {
+                    "title": "Model Path",
+                    "type": "string"
+                },
+                "data_path": {
+                    "title": "Data Path",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "model_path",
+                "data_path"
+            ],
+            "title": "InputModel",
+            "type": "object"
+        },
+        "output_schema": {
+            "properties": {
+                "message": {
+                    "title": "Message",
+                    "type": "string"
+                },
+                "prediction_path": {
+                    "title": "Prediction Path",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "message",
+                "prediction_path"
+            ],
+            "title": "OutputModel",
+            "type": "object"
+        },
+        "secrets_schema": null,
+        "source_url": "https://github.com/filipchrvala/industry_sg_vre/tree/main/pieces/PredictPiece"
+    },
     "TrainModelPiece": {
         "name": "TrainModelPiece",
         "dependency": {
