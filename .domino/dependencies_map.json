@@ -2,24 +2,14 @@
     "group0": {
         "dependency": {
             "dockerfile": null,
-            "requirements_file": null
-        },
-        "pieces": [
-            "TrainModelPiece"
-        ],
-        "secrets": [],
-        "source_image": "ghcr.io/filipchrvala/industry_sg_vre:0.1.27-group0"
-    },
-    "group1": {
-        "dependency": {
-            "dockerfile": null,
             "requirements_file": "requirements_0.txt"
         },
         "pieces": [
+            "TrainModelPiece",
             "PreprocessEnergyDataPiece",
             "FetchEnergyDataPiece"
         ],
         "secrets": [],
-        "source_image": "ghcr.io/filipchrvala/industry_sg_vre:0.1.27-group1"
+        "source_image": "ghcr.io/filipchrvala/industry_sg_vre:0.1.28-group0"
     }
 }

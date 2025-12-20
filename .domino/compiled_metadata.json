@@ -3,9 +3,13 @@
         "name": "TrainModelPiece",
         "dependency": {
             "dockerfile": null,
-            "requirements_file": null
+            "requirements_file": "requirements_0.txt"
         },
-        "tags": [],
+        "tags": [
+            "XGBoost",
+            "Training",
+            "Energy"
+        ],
         "style": {
             "node_label": "Train Energy Model (XGBoost)",
             "node_type": "default",
@@ -13,22 +17,33 @@
                 "backgroundColor": "#ebebeb"
             },
             "useIcon": true,
-            "icon_class_name": "fa-solid:chart-line",
+            "icon_class_name": "fa-solid:brain",
             "iconStyle": {
                 "cursor": "pointer"
             }
         },
-        "description": "Train XGBoost model on preprocessed energy data",
+        "description": "Train XGBoost energy forecasting model",
+        "dependencies_group": "0",
+        "container_resources": {
+            "requests": {
+                "cpu": 200,
+                "memory": 256
+            },
+            "limits": {
+                "cpu": 1000,
+                "memory": 1024
+            }
+        },
         "input_schema": {
             "properties": {
-                "train_file_path": {
-                    "description": "Path to training dataset parquet",
-                    "title": "Train File Path",
+                "data_path": {
+                    "description": "Path to preprocessed parquet or CSV dataset",
+                    "title": "Training dataset path",
                     "type": "string"
                 }
             },
             "required": [
-                "train_file_path"
+                "data_path"
             ],
             "title": "InputModel",
             "type": "object"
@@ -36,17 +51,25 @@
         "output_schema": {
             "properties": {
                 "message": {
+                    "description": "Training result message",
                     "title": "Message",
                     "type": "string"
                 },
-                "model_path": {
-                    "title": "Model Path",
+                "model_file_path": {
+                    "description": "Path to trained model file",
+                    "title": "Model File Path",
+                    "type": "string"
+                },
+                "train_log_path": {
+                    "description": "Path to training log file",
+                    "title": "Train Log Path",
                     "type": "string"
                 }
             },
             "required": [
                 "message",
-                "model_path"
+                "model_file_path",
+                "train_log_path"
             ],
             "title": "OutputModel",
             "type": "object"
