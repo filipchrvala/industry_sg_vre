@@ -15,13 +15,15 @@ class PreprocessEnergyDataPiece(BasePiece):
         input_path = Path(input_data.input_path)
 
         if not input_path.exists():
-            msg = f"Input file not found: {input_path}"
-            print(f"[ERROR] {msg}")
-            return OutputModel(msg, "", "")
+            return OutputModel(
+                message=f"Input file not found: {input_path}",
+                train_file_path="",
+                predict_file_path=""
+            )
 
         df = pd.read_parquet(input_path)
 
-        # --- BASIC CLEAN ---
+        # -------- BASIC CLEAN --------
         df["datetime"] = pd.to_datetime(df["datetime"])
         df = df.drop_duplicates(subset=["datetime"])
         df = df.sort_values("datetime")
@@ -30,7 +32,7 @@ class PreprocessEnergyDataPiece(BasePiece):
         # unify to 1-minute grid
         df = df.resample("1min").mean().ffill()
 
-        # --- TRAIN DATA (15 min) ---
+        # -------- TRAIN DATA (15 min) --------
         train_df = df.resample("15min").mean().reset_index()
         train_df["hour"] = train_df["datetime"].dt.hour
         train_df["day_of_week"] = train_df["datetime"].dt.dayofweek
@@ -44,7 +46,7 @@ class PreprocessEnergyDataPiece(BasePiece):
         train_df["cos_hour"] = np.cos(2 * np.pi * train_df["hour"] / 24)
         train_df = train_df.dropna()
 
-        # --- PREDICT DATA (daily) ---
+        # -------- PREDICT DATA (DAILY) --------
         predict_df = df.resample("1D").mean().reset_index()
 
         train_out = Path(self.results_path) / "train_features_15min.parquet"
@@ -56,12 +58,12 @@ class PreprocessEnergyDataPiece(BasePiece):
         print("[SUCCESS] Preprocessing finished")
 
         self.display_result = {
-            "train_file": str(train_out),
-            "predict_file": str(predict_out)
+            "train_features": str(train_out),
+            "predict_features": str(predict_out),
         }
 
         return OutputModel(
-            "Preprocessing completed",
-            str(train_out),
-            str(predict_out)
+            message="Preprocessing completed successfully",
+            train_file_path=str(train_out),
+            predict_file_path=str(predict_out),
         )
