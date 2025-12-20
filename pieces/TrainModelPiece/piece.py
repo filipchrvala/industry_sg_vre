@@ -7,26 +7,19 @@ import xgboost as xgb
 
 class TrainModelPiece(BasePiece):
 
-    def piece_function(self, input_data: InputModel):
-
+    def piece_function(self, input_data: InputModel) -> OutputModel:
         print("[INFO] TrainModelPiece started")
-        print(f"[INFO] Using training data: {input_data.train_file_path}")
+        print(f"[INFO] Training file: {input_data.train_file_path}")
 
-        data_path = Path(input_data.train_file_path)
+        train_path = Path(input_data.train_file_path)
 
-        if not data_path.exists():
-            return OutputModel(
-                message=f"Training file not found: {data_path}",
-                model_path=""
-            )
+        if not train_path.exists():
+            raise FileNotFoundError(f"Training file not found: {train_path}")
 
-        df = pd.read_parquet(data_path)
+        df = pd.read_parquet(train_path)
 
         if "load_kw" not in df.columns:
-            return OutputModel(
-                message="Column 'load_kw' not found in training data",
-                model_path=""
-            )
+            raise ValueError("Column 'load_kw' not found in training data")
 
         X = df.drop(columns=["load_kw", "datetime"], errors="ignore")
         y = df["load_kw"]
@@ -41,15 +34,18 @@ class TrainModelPiece(BasePiece):
             random_state=42
         )
 
+        print("[INFO] Training XGBoost model")
         model.fit(X, y)
 
         model_path = Path(self.results_path) / "xgboost_energy_model.json"
         model.save_model(model_path)
 
-        print("[SUCCESS] Model training completed")
+        print("[SUCCESS] Model trained successfully")
 
+        # ✅ POVINNÉ PRE DOMINO UI
         self.display_result = {
-            "model_path": str(model_path)
+            "file_type": "model",
+            "file_path": str(model_path)
         }
 
         return OutputModel(
