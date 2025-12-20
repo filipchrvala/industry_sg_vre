@@ -36,31 +36,20 @@
         "input_schema": {
             "properties": {
                 "input_path": {
-                    "default": "/home/shared_storage/data/merged_energy_data.parquet",
-                    "description": "Path to raw merged CSV or Parquet file",
+                    "description": "Path to merged energy data from FetchEnergyDataPiece",
                     "title": "Input Path",
-                    "type": "string"
-                },
-                "train_output_path": {
-                    "default": "/home/shared_storage/data/train_features_15min.parquet",
-                    "description": "Output Parquet for model training",
-                    "title": "Train Output Path",
-                    "type": "string"
-                },
-                "predict_output_path": {
-                    "default": "/home/shared_storage/data/predict_features_daily.parquet",
-                    "description": "Output Parquet for daily load forecast",
-                    "title": "Predict Output Path",
                     "type": "string"
                 }
             },
+            "required": [
+                "input_path"
+            ],
             "title": "InputModel",
             "type": "object"
         },
         "output_schema": {
             "properties": {
                 "message": {
-                    "default": "",
                     "title": "Message",
                     "type": "string"
                 },
@@ -74,6 +63,7 @@
                 }
             },
             "required": [
+                "message",
                 "train_file_path",
                 "predict_file_path"
             ],
