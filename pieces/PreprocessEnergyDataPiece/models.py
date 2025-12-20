@@ -3,7 +3,7 @@ from pydantic import BaseModel, Field
 
 class InputModel(BaseModel):
     input_path: str = Field(
-        description="Path to merged energy data from FetchEnergyDataPiece"
+        description="Path to merged energy parquet file"
     )
 
 
