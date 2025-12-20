@@ -1,5 +1,5 @@
 {
-  "name": "TrainEnergyModelPiece",
+  "name": "TrainModelPiece",
   "description": "Train XGBoost model on preprocessed energy data",
   "style": {
     "node_label": "Train Energy Model (XGBoost)",
