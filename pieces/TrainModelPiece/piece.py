@@ -1,5 +1,4 @@
 from domino.base_piece import BasePiece
-from .models import InputModel, OutputModel
 from pathlib import Path
 import pandas as pd
 import xgboost as xgb
@@ -7,11 +6,11 @@ import xgboost as xgb
 
 class TrainModelPiece(BasePiece):
 
-    def piece_function(self, input_data: InputModel) -> OutputModel:
+    def piece_function(self, train_file_path: str):
         print("[INFO] TrainModelPiece started")
-        print(f"[INFO] Training file: {input_data.train_file_path}")
+        print(f"[INFO] Training file: {train_file_path}")
 
-        train_path = Path(input_data.train_file_path)
+        train_path = Path(train_file_path)
 
         if not train_path.exists():
             raise FileNotFoundError(f"Training file not found: {train_path}")
@@ -42,13 +41,13 @@ class TrainModelPiece(BasePiece):
 
         print("[SUCCESS] Model trained successfully")
 
-        # ✅ POVINNÉ PRE DOMINO UI
+        # POVINNÉ pre Domino
         self.display_result = {
             "file_type": "model",
             "file_path": str(model_path)
         }
 
-        return OutputModel(
-            message="Model trained successfully",
-            model_path=str(model_path)
-        )
+        return {
+            "message": "Model trained successfully",
+            "model_path": str(model_path)
+        }
