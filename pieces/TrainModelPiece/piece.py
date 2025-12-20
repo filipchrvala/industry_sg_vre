@@ -1,61 +1,66 @@
 from domino.base_piece import BasePiece
 from .models import InputModel, OutputModel
-from pathlib import Path
+
 import pandas as pd
-import xgboost as xgb
+from pathlib import Path
 import joblib
+from xgboost import XGBRegressor
+from datetime import datetime
 
 
 class TrainModelPiece(BasePiece):
-    """
-    Train XGBoost model on preprocessed energy data
-    """
 
     def piece_function(self, input_data: InputModel) -> OutputModel:
-        print("[INFO] TrainModelPiece started")
 
-        train_path = Path(input_data.train_file_path)
-        print(f"[INFO] Using training file: {train_path}")
+        print(f"[INFO] TrainModelPiece started")
+        print(f"[INFO] Using training data: {input_data.data_path}")
 
-        if not train_path.exists():
-            raise FileNotFoundError(f"Training file not found: {train_path}")
+        data_path = Path(input_data.data_path)
+
+        if not data_path.exists():
+            raise FileNotFoundError(f"Training data not found: {data_path}")
 
         # ---- LOAD DATA ----
-        df = pd.read_parquet(train_path)
+        if data_path.suffix == ".parquet":
+            df = pd.read_parquet(data_path)
+        else:
+            df = pd.read_csv(data_path)
 
-        if "datetime" in df.columns:
-            df = df.drop(columns=["datetime"])
+        # ---- FEATURES / TARGET ----
+        target = "load"
+        features = [c for c in df.columns if c not in ["datetime", target]]
 
-        X = df.iloc[:, :-1]
-        y = df.iloc[:, -1]
-
-        print(f"[INFO] Rows: {len(df)}")
-        print(f"[INFO] Features: {list(X.columns)}")
+        X = df[features]
+        y = df[target]
 
         # ---- TRAIN MODEL ----
-        model = xgb.XGBRegressor(
-            n_estimators=100,
-            max_depth=6,
-            learning_rate=0.1,
+        model = XGBRegressor(
             objective="reg:squarederror",
-            n_jobs=1
+            learning_rate=0.05,
+            max_depth=5,
+            n_estimators=300
         )
 
         model.fit(X, y)
 
-        # ---- SAVE MODEL ----
-        model_path = Path(self.results_path) / "xgboost_energy_model.joblib"
+        # ---- SAVE OUTPUTS ----
+        model_path = Path(self.results_path) / "xgboost_model.pkl"
+        log_path = Path(self.results_path) / "training_log.txt"
+
         joblib.dump(model, model_path)
 
+        with open(log_path, "w") as f:
+            f.write(f"Model trained at {datetime.utcnow()}\n")
+            f.write(f"Rows: {len(df)}\n")
+            f.write(f"Features: {features}\n")
+
+        message = "Model trained successfully"
+
+        print(f"[SUCCESS] {message}")
         print(f"[SUCCESS] Model saved to {model_path}")
 
-        # POVINNÉ PRE DOMINO
-        self.display_result = {
-            "file_type": "model",
-            "file_path": str(model_path)
-        }
-
         return OutputModel(
-            message="Model trained successfully",
-            model_path=str(model_path)
+            message=message,
+            model_file_path=str(model_path),
+            train_log_path=str(log_path)
         )
