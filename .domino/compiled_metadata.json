@@ -3,47 +3,32 @@
         "name": "PredictPiece",
         "dependency": {
             "dockerfile": null,
-            "requirements_file": null
+            "requirements_file": "requirements_0.txt"
         },
         "tags": [],
         "style": {
-            "node_label": "Piece",
+            "node_label": "Predict Energy Load",
             "node_type": "default",
             "node_style": {
                 "backgroundColor": "#ebebeb"
             },
             "useIcon": true,
-            "icon_class_name": "fa-solid fa-circle",
+            "icon_class_name": "fa-solid:chart-line",
             "iconStyle": {
                 "cursor": "pointer"
             }
         },
-        "label": "Predict Energy Load",
-        "description": "Run XGBoost model to predict energy load on 15-minute data",
-        "version": "0.1.0",
-        "inputs": [
-            {
-                "name": "model_path",
-                "type": "string"
-            },
-            {
-                "name": "data_path",
-                "type": "string"
-            }
-        ],
-        "outputs": [
-            {
-                "name": "prediction_path",
-                "type": "string"
-            }
-        ],
+        "description": "Run prediction using trained XGBoost model",
+        "dependencies_group": "0",
         "input_schema": {
             "properties": {
                 "model_path": {
+                    "description": "Path to trained XGBoost model",
                     "title": "Model Path",
                     "type": "string"
                 },
                 "data_path": {
+                    "description": "Path to prediction dataset (15min)",
                     "title": "Data Path",
                     "type": "string"
                 }
@@ -61,14 +46,14 @@
                     "title": "Message",
                     "type": "string"
                 },
-                "prediction_path": {
-                    "title": "Prediction Path",
+                "prediction_file_path": {
+                    "title": "Prediction File Path",
                     "type": "string"
                 }
             },
             "required": [
                 "message",
-                "prediction_path"
+                "prediction_file_path"
             ],
             "title": "OutputModel",
             "type": "object"
