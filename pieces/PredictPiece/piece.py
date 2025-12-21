@@ -36,7 +36,6 @@ class PredictPiece(BasePiece):
         # ---- FEATURES (MUST MATCH TRAINING) ----
         target = "load_mw"
         features = [c for c in df.columns if c not in ["datetime", target]]
-
         X = df[features]
 
         # ---- PREDICT ----
@@ -61,8 +60,9 @@ class PredictPiece(BasePiece):
         print(f"[SUCCESS] {message}")
         print(f"[SUCCESS] Predictions saved to {output_path}")
 
+        # ✅ TOTO JE CELÁ OPRAVA
         return OutputModel(
             message=message,
-            predictions_file_path=str(output_path),
+            prediction_file_path=str(output_path),
             prediction_log_path=str(log_path)
         )
