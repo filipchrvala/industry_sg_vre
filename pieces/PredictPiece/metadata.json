@@ -1,13 +1,12 @@
 {
   "name": "PredictPiece",
-  "label": "Predict Energy Load",
-  "description": "Run XGBoost model to predict energy load on 15-minute data",
-  "version": "0.1.0",
-  "inputs": [
-    {"name": "model_path", "type": "string"},
-    {"name": "data_path", "type": "string"}
-  ],
-  "outputs": [
-    {"name": "prediction_path", "type": "string"}
-  ]
+  "description": "Run prediction using trained XGBoost model",
+  "dependencies_group": "0",
+  "dependency": {
+    "requirements_file": "requirements_0.txt"
+  },
+  "style": {
+    "node_label": "Predict Energy Load",
+    "icon_class_name": "fa-solid:chart-line"
+  }
 }
