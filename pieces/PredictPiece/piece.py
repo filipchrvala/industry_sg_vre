@@ -4,15 +4,16 @@ from .models import InputModel, OutputModel
 import pandas as pd
 from pathlib import Path
 import joblib
+from datetime import datetime
 
 
 class PredictPiece(BasePiece):
 
     def piece_function(self, input_data: InputModel) -> OutputModel:
 
-        self.logger.info("PredictPiece started")
-        self.logger.info(f"Model path: {input_data.model_path}")
-        self.logger.info(f"Data path: {input_data.data_path}")
+        print("[INFO] PredictPiece started")
+        print(f"[INFO] Model path: {input_data.model_path}")
+        print(f"[INFO] Data path: {input_data.data_path}")
 
         model_path = Path(input_data.model_path)
         data_path = Path(input_data.data_path)
@@ -32,28 +33,36 @@ class PredictPiece(BasePiece):
         else:
             df = pd.read_csv(data_path)
 
-        # ---- PREP FEATURES ----
-        features = [c for c in df.columns if c != "datetime"]
+        # ---- FEATURES (MUST MATCH TRAINING) ----
+        target = "load_mw"
+        features = [c for c in df.columns if c not in ["datetime", target]]
+
         X = df[features]
 
         # ---- PREDICT ----
         predictions = model.predict(X)
-        df["predicted_load"] = predictions
+
+        df_out = df.copy()
+        df_out["prediction_load_mw"] = predictions
 
         # ---- SAVE OUTPUT ----
-        output_path = Path(self.results_path) / "prediction_15min.parquet"
-        df.to_parquet(output_path, index=False)
+        output_path = Path(self.results_path) / "predictions_15min.parquet"
+        df_out.to_parquet(output_path, index=False)
 
-        # ---- DOMINO UI OUTPUT ----
-        self.display_result = {
-            "file_type": "parquet",
-            "file_path": str(output_path)
-        }
+        log_path = Path(self.results_path) / "prediction_log.txt"
+        with open(log_path, "w") as f:
+            f.write(f"Prediction time (UTC): {datetime.utcnow()}\n")
+            f.write(f"Rows: {len(df_out)}\n")
+            f.write(f"Features used: {features}\n")
+            f.write(f"Model: {model_path.name}\n")
 
         message = "Prediction finished successfully"
-        self.logger.info(message)
+
+        print(f"[SUCCESS] {message}")
+        print(f"[SUCCESS] Predictions saved to {output_path}")
 
         return OutputModel(
             message=message,
-            prediction_file_path=str(output_path)
+            predictions_file_path=str(output_path),
+            prediction_log_path=str(log_path)
         )
