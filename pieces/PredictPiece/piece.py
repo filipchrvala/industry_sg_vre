@@ -1,3 +1,4 @@
+
 from domino.base_piece import BasePiece
 from .models import InputModel, OutputModel
 
@@ -34,7 +35,7 @@ class PredictPiece(BasePiece):
             df = pd.read_csv(data_path)
 
         # ---- FEATURES (MUST MATCH TRAINING) ----
-        target = "load_mw"
+        target = "load_kw"   # <-- FIX: use kW target
         features = [c for c in df.columns if c not in ["datetime", target]]
         X = df[features]
 
@@ -42,11 +43,11 @@ class PredictPiece(BasePiece):
         predictions = model.predict(X)
 
         df_out = df.copy()
-        df_out["prediction_load_mw"] = predictions
+        df_out["prediction_load_kw"] = predictions   # <-- FIX: output in kW
 
-        # ---- SAVE OUTPUT ----
-        output_path = Path(self.results_path) / "predictions_15min.parquet"
-        df_out.to_parquet(output_path, index=False)
+        # ---- SAVE OUTPUT AS CSV ----
+        output_path = Path(self.results_path) / "predictions_15min.csv"   # <-- FIX: CSV filename
+        df_out.to_csv(output_path, index=False)                           # <-- FIX: save CSV
 
         log_path = Path(self.results_path) / "prediction_log.txt"
         with open(log_path, "w") as f:
@@ -60,9 +61,7 @@ class PredictPiece(BasePiece):
         print(f"[SUCCESS] {message}")
         print(f"[SUCCESS] Predictions saved to {output_path}")
 
-        # ✅ TOTO JE CELÁ OPRAVA
         return OutputModel(
             message=message,
-            prediction_file_path=str(output_path),
-            prediction_log_path=str(log_path)
+            prediction_file_path=str(output_path)
         )
