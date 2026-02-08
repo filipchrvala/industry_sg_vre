@@ -11,6 +11,6 @@
             "FetchEnergyDataPiece"
         ],
         "secrets": [],
-        "source_image": "ghcr.io/filipchrvala/industry_sg_vre:0.1.36-group0"
+        "source_image": "ghcr.io/filipchrvala/industry_sg_vre:0.1.37-group0"
     }
 }
