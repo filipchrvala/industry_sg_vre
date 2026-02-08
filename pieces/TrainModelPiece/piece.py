@@ -27,7 +27,7 @@ class TrainModelPiece(BasePiece):
             df = pd.read_csv(data_path)
 
         # ---- FEATURES / TARGET ----
-        target = "load_mw"
+        target = "load_kw"
 
         # ---- SAFETY CHECK ----
         if target not in df.columns:
