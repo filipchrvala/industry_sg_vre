@@ -179,6 +179,12 @@
                     "description": "Path to merged energy parquet file",
                     "title": "Input Path",
                     "type": "string"
+                },
+                "forecast_hours": {
+                    "default": 24,
+                    "description": "Forecast horizon in hours",
+                    "title": "Forecast Hours",
+                    "type": "integer"
                 }
             },
             "required": [
