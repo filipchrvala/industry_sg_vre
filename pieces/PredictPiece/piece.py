@@ -36,7 +36,7 @@ class PredictPiece(BasePiece):
 
         # ---- FEATURES (MUST MATCH TRAINING) ----
         target = "load_kw"   # <-- FIX: use kW target
-        features = [c for c in df.columns if c not in ["datetime", target]]
+        features = model.get_booster().feature_names
         X = df[features]
 
         # ---- PREDICT ----
