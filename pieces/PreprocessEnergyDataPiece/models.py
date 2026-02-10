@@ -6,6 +6,11 @@ class InputModel(BaseModel):
         description="Path to merged energy parquet file"
     )
 
+    forecast_hours: int = Field(
+        default=24,
+        description="Forecast horizon in hours"
+    )
+
 
 class OutputModel(BaseModel):
     message: str
