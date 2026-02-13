@@ -1,0 +1,14 @@
+{
+  "name": "SimulatePiece",
+  "description": "Energy savings simulation with solar and battery",
+  "inputs": [
+    {"name": "forecast_csv", "type": "file"},
+    {"name": "virtual_solar_csv", "type": "file"},
+    {"name": "virtual_battery_soc_csv", "type": "file"},
+    {"name": "scenario_yml", "type": "file"}
+  ],
+  "outputs": [
+    {"name": "simulated_load_csv", "type": "file"},
+    {"name": "scenario_summary_csv", "type": "file"}
+  ]
+}
