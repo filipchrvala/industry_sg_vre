@@ -1,14 +1,13 @@
+
 {
   "name": "SimulatePiece",
-  "description": "Energy savings simulation with solar and battery",
-  "inputs": [
-    {"name": "forecast_csv", "type": "file"},
-    {"name": "virtual_solar_csv", "type": "file"},
-    {"name": "virtual_battery_soc_csv", "type": "file"},
-    {"name": "scenario_yml", "type": "file"}
-  ],
-  "outputs": [
-    {"name": "simulated_load_csv", "type": "file"},
-    {"name": "scenario_summary_csv", "type": "file"}
-  ]
+  "description": "Energy simulation with solar and battery",
+  "dependencies_group": "0",
+  "dependency": {
+    "requirements_file": "requirements_0.txt"
+  },
+  "style": {
+    "node_label": "Simulate Energy Scenario",
+    "icon_class_name": "fa-solid:calculator"
+  }
 }
