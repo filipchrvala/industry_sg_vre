@@ -34,17 +34,33 @@ class PredictPiece(BasePiece):
         else:
             df = pd.read_csv(data_path)
 
+        # =====================================================
+        # FIX: sometimes datetime is index, not column
+        # =====================================================
         if "datetime" not in df.columns:
-            raise ValueError("Prediction dataset must contain datetime column")
+            print("[WARN] datetime column not found, trying index reset")
+            df = df.reset_index()
+
+        if "datetime" not in df.columns:
+            raise ValueError(
+                f"Prediction dataset must contain datetime column. "
+                f"Columns found: {df.columns.tolist()}"
+            )
 
         df["datetime"] = pd.to_datetime(df["datetime"])
         df = df.sort_values("datetime").reset_index(drop=True)
 
         target = "load_kw"
 
-        # =========================================================
-        # SAME FEATURES AS TRAINING
-        # =========================================================
+        if target not in df.columns:
+            raise ValueError(
+                f"Prediction dataset must contain '{target}'. "
+                f"Columns: {df.columns.tolist()}"
+            )
+
+        # =====================================================
+        # SAME FEATURES AS TRAIN
+        # =====================================================
         print("[INFO] Creating time features")
 
         df["hour"] = df["datetime"].dt.hour
@@ -55,11 +71,9 @@ class PredictPiece(BasePiece):
 
         df["lag_1"] = df[target].shift(1)
         df["lag_4"] = df[target].shift(4)
-        df["lag_96"] = df[target].shift(96)
 
         df = df.dropna().reset_index(drop=True)
 
-        # model expects same feature order
         feature_names = model.get_booster().feature_names
         X = df[feature_names]
 
@@ -81,12 +95,10 @@ class PredictPiece(BasePiece):
             f.write(f"Features used: {feature_names}\n")
             f.write(f"Model: {model_path.name}\n")
 
-        message = "Prediction finished successfully"
-
-        print(f"[SUCCESS] {message}")
+        print("[SUCCESS] Prediction finished")
         print(f"[SUCCESS] Predictions saved to {output_path}")
 
         return OutputModel(
-            message=message,
+            message="Prediction finished successfully",
             prediction_file_path=str(output_path)
         )
