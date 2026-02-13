@@ -11,6 +11,6 @@
             "PredictPiece"
         ],
         "secrets": [],
-        "source_image": "ghcr.io/filipchrvala/industry_sg_vre:0.1.42-group0"
+        "source_image": "ghcr.io/filipchrvala/industry_sg_vre:0.1.43-group0"
     }
 }
