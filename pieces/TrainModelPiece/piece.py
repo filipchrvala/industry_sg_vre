@@ -39,7 +39,7 @@ class TrainModelPiece(BasePiece):
             raise ValueError(f"Target column '{target}' not found")
 
         # =========================================================
-        # BASIC FEATURE ENGINEERING (simple but powerful)
+        # SIMPLE FEATURES FOR SIMULATION MODEL
         # =========================================================
         print("[INFO] Creating time features")
 
@@ -47,16 +47,15 @@ class TrainModelPiece(BasePiece):
         df["dayofweek"] = df["datetime"].dt.dayofweek
         df["month"] = df["datetime"].dt.month
 
-        # lag features (previous load values)
+        # lag features
         print("[INFO] Creating lag features")
-        df["lag_1"] = df[target].shift(1)      # 15min ago
-        df["lag_4"] = df[target].shift(4)      # 1 hour ago (4x15min)
-        df["lag_96"] = df[target].shift(96)    # 1 day ago
+        df["lag_1"] = df[target].shift(1)
+        df["lag_4"] = df[target].shift(4)
 
         df = df.dropna().reset_index(drop=True)
 
         # =========================================================
-        # TRAIN / TEST SPLIT (time-based)
+        # TRAIN / TEST SPLIT (simple time split)
         # =========================================================
         split_index = int(len(df) * 0.8)
 
@@ -83,7 +82,7 @@ class TrainModelPiece(BasePiece):
             objective="reg:squarederror",
             learning_rate=0.05,
             max_depth=6,
-            n_estimators=400,
+            n_estimators=350,
             subsample=0.8,
             colsample_bytree=0.8
         )
@@ -98,7 +97,8 @@ class TrainModelPiece(BasePiece):
         preds = model.predict(X_test)
 
         mae = mean_absolute_error(y_test, preds)
-        rmse = mean_squared_error(y_test, preds, squared=False)
+        mse = mean_squared_error(y_test, preds)
+        rmse = mse ** 0.5   # manual sqrt (fix for older sklearn)
 
         print(f"[METRIC] MAE: {mae:.2f}")
         print(f"[METRIC] RMSE: {rmse:.2f}")
