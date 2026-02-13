@@ -296,5 +296,84 @@
         },
         "secrets_schema": null,
         "source_url": "https://github.com/filipchrvala/industry_sg_vre/tree/main/pieces/PredictPiece"
+    },
+    "SimulatePiece": {
+        "name": "SimulatePiece",
+        "dependency": {
+            "dockerfile": null,
+            "requirements_file": "requirements_0.txt"
+        },
+        "tags": [],
+        "style": {
+            "node_label": "Simulate Energy Scenario",
+            "node_type": "default",
+            "node_style": {
+                "backgroundColor": "#ebebeb"
+            },
+            "useIcon": true,
+            "icon_class_name": "fa-solid:calculator",
+            "iconStyle": {
+                "cursor": "pointer"
+            }
+        },
+        "description": "Energy simulation with solar and battery",
+        "dependencies_group": "0",
+        "input_schema": {
+            "properties": {
+                "forecast_csv": {
+                    "description": "Path to predictions_15min.csv from PredictPiece",
+                    "title": "Forecast Csv",
+                    "type": "string"
+                },
+                "virtual_solar_csv": {
+                    "default": "",
+                    "description": "Path to virtual_solar.csv",
+                    "title": "Virtual Solar Csv",
+                    "type": "string"
+                },
+                "virtual_battery_soc_csv": {
+                    "default": "",
+                    "description": "Path to virtual_battery_soc.csv",
+                    "title": "Virtual Battery Soc Csv",
+                    "type": "string"
+                },
+                "scenario_yml": {
+                    "description": "Path to scenario yaml file",
+                    "title": "Scenario Yml",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "forecast_csv",
+                "scenario_yml"
+            ],
+            "title": "InputModel",
+            "type": "object"
+        },
+        "output_schema": {
+            "properties": {
+                "message": {
+                    "title": "Message",
+                    "type": "string"
+                },
+                "simulated_load_csv": {
+                    "title": "Simulated Load Csv",
+                    "type": "string"
+                },
+                "scenario_summary_csv": {
+                    "title": "Scenario Summary Csv",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "message",
+                "simulated_load_csv",
+                "scenario_summary_csv"
+            ],
+            "title": "OutputModel",
+            "type": "object"
+        },
+        "secrets_schema": null,
+        "source_url": "https://github.com/filipchrvala/industry_sg_vre/tree/main/pieces/SimulatePiece"
     }
 }

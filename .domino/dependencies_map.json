@@ -8,9 +8,10 @@
             "TrainModelPiece",
             "PreprocessEnergyDataPiece",
             "FetchEnergyDataPiece",
-            "PredictPiece"
+            "PredictPiece",
+            "SimulatePiece"
         ],
         "secrets": [],
-        "source_image": "ghcr.io/filipchrvala/industry_sg_vre:0.1.43-group0"
+        "source_image": "ghcr.io/filipchrvala/industry_sg_vre:0.1.45-group0"
     }
 }
