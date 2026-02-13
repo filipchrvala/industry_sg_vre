@@ -3,25 +3,28 @@ from domino.base_piece import BasePiece
 from .models import InputModel, OutputModel
 from pathlib import Path
 import pandas as pd
+import math
 
 
 class PreprocessEnergyDataPiece(BasePiece):
     """
-    Preprocess + configurable forecast horizon from UI (hours ahead)
+    Preprocess energy data + generate realistic future horizon
+    Future is created by repeating last week pattern (not flat values)
     """
 
     def piece_function(self, input_data: InputModel) -> OutputModel:
         print("[INFO] PreprocessEnergyDataPiece started")
 
         input_path = Path(input_data.input_path)
-        forecast_hours = getattr(input_data, "forecast_hours", 24)  # default 24h
+        forecast_hours = getattr(input_data, "forecast_hours", 24)
 
         print(f"[INFO] Using input file: {input_path}")
-        print(f"[INFO] Forecast horizon from UI: {forecast_hours} hours")
+        print(f"[INFO] Forecast horizon: {forecast_hours} hours")
 
         if not input_path.exists():
             raise FileNotFoundError(f"Input file not found: {input_path}")
 
+        # ---- LOAD ----
         df = pd.read_parquet(input_path)
 
         df["datetime"] = pd.to_datetime(df["datetime"])
@@ -29,50 +32,62 @@ class PreprocessEnergyDataPiece(BasePiece):
         df = df.sort_values("datetime")
         df = df.set_index("datetime")
 
-        # training dataset
-        df_1min = df.resample("1min").mean().ffill()
-
-        # prediction dataset base
+        # ---- RESAMPLE TO 15MIN (canonical resolution) ----
         df_15min = df.resample("15min").mean().ffill()
 
-        # -------- FUTURE HORIZON FROM UI --------
+        # training dataset (keep same resolution as reality)
+        train_df = df_15min.copy()
+
+        # ---- FUTURE GENERATION USING LAST WEEK PATTERN ----
+        print("[INFO] Building future dataset using last week replay")
+
+        last_timestamp = df_15min.index.max()
+
+        # last 7 days pattern
+        last_week = df_15min.last("7D")
+
+        if len(last_week) == 0:
+            raise ValueError("Not enough historical data to build last-week pattern")
+
+        # how many steps needed
         steps = int(forecast_hours * 60 / 15)
+        print(f"[INFO] Need future steps: {steps}")
 
-        print(f"[INFO] Generating future horizon: {steps} rows (15min resolution)")
+        repeat_count = math.ceil(steps / len(last_week))
+        future_pattern = pd.concat([last_week] * repeat_count)
 
-        last_time = df_15min.index.max()
+        future_pattern = future_pattern.iloc[:steps].copy()
 
+        # shift timestamps forward
         future_index = pd.date_range(
-            start=last_time + pd.Timedelta(minutes=15),
+            start=last_timestamp + pd.Timedelta(minutes=15),
             periods=steps,
             freq="15min"
         )
 
-        future_df = pd.DataFrame(index=future_index)
+        future_pattern.index = future_index
 
-        # baseline future features = last known value
-        for col in df_15min.columns:
-            future_df[col] = df_15min[col].iloc[-1]
+        # combine history + future
+        predict_df = pd.concat([df_15min, future_pattern])
 
-        predict_df = pd.concat([df_15min, future_df])
-
-        # -------- SAVE --------
-        train_path = Path(self.results_path) / "train_dataset_1min.parquet"
+        # ---- SAVE ----
+        train_path = Path(self.results_path) / "train_dataset.parquet"
         predict_path = Path(self.results_path) / "predict_dataset_15min.parquet"
 
-        df_1min.reset_index().to_parquet(train_path, index=False)
+        train_df.reset_index().to_parquet(train_path, index=False)
         predict_df.reset_index().to_parquet(predict_path, index=False)
 
         print("[SUCCESS] Preprocessing finished")
-        print(f"[INFO] Predict dataset rows: {len(predict_df)}")
+        print(f"[INFO] Train rows: {len(train_df)}")
+        print(f"[INFO] Predict rows: {len(predict_df)}")
 
         self.display_result = {
             "file_type": "parquet",
-            "file_path": str(train_path)
+            "file_path": str(predict_path)
         }
 
         return OutputModel(
-            message=f"Preprocessing finished (forecast +{forecast_hours}h)",
+            message=f"Preprocessing finished (future from last week, +{forecast_hours}h)",
             train_file_path=str(train_path),
             predict_file_path=str(predict_path)
         )
