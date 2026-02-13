@@ -34,26 +34,51 @@ class PredictPiece(BasePiece):
         else:
             df = pd.read_csv(data_path)
 
-        # ---- FEATURES (MUST MATCH TRAINING) ----
-        target = "load_kw"   # <-- FIX: use kW target
-        features = model.get_booster().feature_names
-        X = df[features]
+        if "datetime" not in df.columns:
+            raise ValueError("Prediction dataset must contain datetime column")
+
+        df["datetime"] = pd.to_datetime(df["datetime"])
+        df = df.sort_values("datetime").reset_index(drop=True)
+
+        target = "load_kw"
+
+        # =========================================================
+        # SAME FEATURES AS TRAINING
+        # =========================================================
+        print("[INFO] Creating time features")
+
+        df["hour"] = df["datetime"].dt.hour
+        df["dayofweek"] = df["datetime"].dt.dayofweek
+        df["month"] = df["datetime"].dt.month
+
+        print("[INFO] Creating lag features")
+
+        df["lag_1"] = df[target].shift(1)
+        df["lag_4"] = df[target].shift(4)
+        df["lag_96"] = df[target].shift(96)
+
+        df = df.dropna().reset_index(drop=True)
+
+        # model expects same feature order
+        feature_names = model.get_booster().feature_names
+        X = df[feature_names]
 
         # ---- PREDICT ----
-        predictions = model.predict(X)
+        print("[INFO] Running prediction")
+        preds = model.predict(X)
 
         df_out = df.copy()
-        df_out["prediction_load_kw"] = predictions   # <-- FIX: output in kW
+        df_out["prediction_load_kw"] = preds
 
-        # ---- SAVE OUTPUT AS CSV ----
-        output_path = Path(self.results_path) / "predictions_15min.csv"   # <-- FIX: CSV filename
-        df_out.to_csv(output_path, index=False)                           # <-- FIX: save CSV
+        # ---- SAVE CSV ----
+        output_path = Path(self.results_path) / "predictions_15min.csv"
+        df_out.to_csv(output_path, index=False)
 
         log_path = Path(self.results_path) / "prediction_log.txt"
         with open(log_path, "w") as f:
             f.write(f"Prediction time (UTC): {datetime.utcnow()}\n")
             f.write(f"Rows: {len(df_out)}\n")
-            f.write(f"Features used: {features}\n")
+            f.write(f"Features used: {feature_names}\n")
             f.write(f"Model: {model_path.name}\n")
 
         message = "Prediction finished successfully"
