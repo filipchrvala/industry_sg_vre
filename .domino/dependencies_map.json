@@ -7,11 +7,12 @@
         "pieces": [
             "TrainModelPiece",
             "PreprocessEnergyDataPiece",
+            "KPIPiece",
             "FetchEnergyDataPiece",
             "PredictPiece",
             "SimulatePiece"
         ],
         "secrets": [],
-        "source_image": "ghcr.io/filipchrvala/industry_sg_vre:0.1.46-group0"
+        "source_image": "ghcr.io/filipchrvala/industry_sg_vre:0.1.47-group0"
     }
 }

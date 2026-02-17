@@ -157,6 +157,86 @@
         "secrets_schema": null,
         "source_url": "https://github.com/filipchrvala/industry_sg_vre/tree/main/pieces/PreprocessEnergyDataPiece"
     },
+    "KPIPiece": {
+        "name": "KPIPiece",
+        "dependency": {
+            "dockerfile": null,
+            "requirements_file": "requirements_0.txt"
+        },
+        "tags": [],
+        "style": {
+            "node_label": "Compute Energy KPIs",
+            "node_type": "default",
+            "node_style": {
+                "backgroundColor": "#ebebeb"
+            },
+            "useIcon": true,
+            "icon_class_name": "fa-solid:chart-column",
+            "iconStyle": {
+                "cursor": "pointer"
+            }
+        },
+        "description": "Compute operational and financial KPIs from simulation",
+        "dependencies_group": "0",
+        "input_schema": {
+            "properties": {
+                "forecast_csv": {
+                    "description": "Path to predictions_15min.csv",
+                    "title": "Forecast Csv",
+                    "type": "string"
+                },
+                "simulated_load_csv": {
+                    "description": "Path to simulated_results.csv",
+                    "title": "Simulated Load Csv",
+                    "type": "string"
+                },
+                "scenario_summary_csv": {
+                    "description": "Path to summary.csv from SimulatePiece",
+                    "title": "Scenario Summary Csv",
+                    "type": "string"
+                },
+                "production_csv": {
+                    "description": "Production tons csv from disk",
+                    "title": "Production Csv",
+                    "type": "string"
+                },
+                "actual_csv": {
+                    "default": "",
+                    "description": "Optional actual load csv",
+                    "title": "Actual Csv",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "forecast_csv",
+                "simulated_load_csv",
+                "scenario_summary_csv",
+                "production_csv"
+            ],
+            "title": "InputModel",
+            "type": "object"
+        },
+        "output_schema": {
+            "properties": {
+                "message": {
+                    "title": "Message",
+                    "type": "string"
+                },
+                "kpi_results_csv": {
+                    "title": "Kpi Results Csv",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "message",
+                "kpi_results_csv"
+            ],
+            "title": "OutputModel",
+            "type": "object"
+        },
+        "secrets_schema": null,
+        "source_url": "https://github.com/filipchrvala/industry_sg_vre/tree/main/pieces/KPIPiece"
+    },
     "FetchEnergyDataPiece": {
         "name": "FetchEnergyDataPiece",
         "dependency": {
