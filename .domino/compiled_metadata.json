@@ -315,6 +315,74 @@
         "secrets_schema": null,
         "source_url": "https://github.com/filipchrvala/industry_sg_vre/tree/main/pieces/FetchEnergyDataPiece"
     },
+    "InvestmentEvalPiece": {
+        "name": "InvestmentEvalPiece",
+        "dependency": {
+            "dockerfile": null,
+            "requirements_file": "requirements_0.txt"
+        },
+        "tags": [],
+        "style": {
+            "node_label": "Investment Evaluation",
+            "node_type": "default",
+            "node_style": {
+                "backgroundColor": "#ebebeb"
+            },
+            "useIcon": true,
+            "icon_class_name": "fa-solid:chart-line",
+            "iconStyle": {
+                "cursor": "pointer"
+            }
+        },
+        "description": "Evaluates solar & battery investment: payback, NPV, LCOE, CO2",
+        "dependencies_group": "0",
+        "input_schema": {
+            "properties": {
+                "kpi_results_csv": {
+                    "description": "Path to kpi_results.csv from KPIPiece",
+                    "title": "Kpi Results Csv",
+                    "type": "string"
+                },
+                "battery_summary_csv": {
+                    "default": "",
+                    "description": "Path to battery summary csv (cycles etc.)",
+                    "title": "Battery Summary Csv",
+                    "type": "string"
+                },
+                "investment_config_yml": {
+                    "description": "Path to investment config yaml",
+                    "title": "Investment Config Yml",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "kpi_results_csv",
+                "investment_config_yml"
+            ],
+            "title": "InputModel",
+            "type": "object"
+        },
+        "output_schema": {
+            "properties": {
+                "message": {
+                    "title": "Message",
+                    "type": "string"
+                },
+                "investment_evaluation_json": {
+                    "title": "Investment Evaluation Json",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "message",
+                "investment_evaluation_json"
+            ],
+            "title": "OutputModel",
+            "type": "object"
+        },
+        "secrets_schema": null,
+        "source_url": "https://github.com/filipchrvala/industry_sg_vre/tree/main/pieces/InvestmentEvalPiece"
+    },
     "PredictPiece": {
         "name": "PredictPiece",
         "dependency": {
