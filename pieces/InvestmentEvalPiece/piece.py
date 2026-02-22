@@ -5,8 +5,32 @@ from pathlib import Path
 import pandas as pd
 import yaml
 
-from .models import simple_payback, npv, co2_saved, lcoe
 
+# ===============================
+# FINANCIAL FUNCTIONS
+# ===============================
+
+def simple_payback(capex: float, annual_savings: float) -> float:
+    return capex / annual_savings if annual_savings > 0 else 999
+
+
+def npv(capex: float, annual_cash: float, years: int, dr: float) -> float:
+    factor = (1 - (1 + dr) ** -years) / dr
+    return -capex + annual_cash * factor
+
+
+def co2_saved(annual_pv_mwh: float, grid_factor: float = 0.57) -> float:
+    return annual_pv_mwh * grid_factor
+
+
+def lcoe(capex: float, annual_mwh: float, degradation: float, years: int) -> float:
+    total_mwh = sum(annual_mwh * (1 - degradation) ** y for y in range(years))
+    return capex / total_mwh if total_mwh > 0 else 999
+
+
+# ===============================
+# PIECE
+# ===============================
 
 class InvestmentEvalPiece(BasePiece):
 
@@ -15,73 +39,78 @@ class InvestmentEvalPiece(BasePiece):
         print("\n[INFO] ===== INVESTMENT PIECE START =====")
 
         kpi_csv = Path(input_data.kpi_results_csv)
-        bat_csv = Path(input_data.battery_summary_csv)
-        cfg_yml = Path(input_data.investment_config_yml)
+        battery_csv = Path(input_data.battery_summary_csv)
+        config_yml = Path(input_data.investment_config_yml)
 
+        # ---------------------------
+        # VALIDATION
+        # ---------------------------
         if not kpi_csv.exists():
-            raise FileNotFoundError(f"KPI csv not found: {kpi_csv}")
+            raise FileNotFoundError(f"KPI CSV not found: {kpi_csv}")
 
-        if not bat_csv.exists():
-            raise FileNotFoundError(f"Battery summary not found: {bat_csv}")
+        if not battery_csv.exists():
+            raise FileNotFoundError(f"Battery summary CSV not found: {battery_csv}")
 
-        if not cfg_yml.exists():
-            raise FileNotFoundError(f"Config yaml not found: {cfg_yml}")
+        if not config_yml.exists():
+            raise FileNotFoundError(f"Investment config YAML not found: {config_yml}")
 
-        print("[INFO] Loading KPI & config")
+        print("[INFO] Loading inputs")
 
-        # ✅ správne čítanie KPI (1 riadok dataframe)
         kpi_df = pd.read_csv(kpi_csv)
-        bat_df = pd.read_csv(bat_csv)
+        battery_df = pd.read_csv(battery_csv)
 
-        with open(cfg_yml) as f:
+        with open(config_yml) as f:
             cfg = yaml.safe_load(f)
 
-        # -----------------------------
-        # CAPEX
-        # -----------------------------
-        solar_capex = cfg["solar_capex_eur"]
-        battery_capex = cfg["battery_capex_eur"]
-        total_capex = solar_capex + battery_capex
-
+        # ---------------------------
+        # EXTRACT VALUES
+        # ---------------------------
         annual_savings = float(kpi_df["annual_savings_eur"].iloc[0])
         annual_pv_mwh = float(kpi_df.get("annual_pv_mwh_est", pd.Series([0])).iloc[0])
 
+        solar_capex = float(cfg["solar_capex_eur"])
+        battery_capex = float(cfg["battery_capex_eur"])
+        total_capex = solar_capex + battery_capex
+
         degradation = cfg.get("degradation_per_year", 0.005)
-        discount = cfg.get("discount_rate", 0.08)
+        discount_rate = cfg.get("discount_rate", 0.08)
         years = cfg.get("analysis_years", 15)
 
-        print(f"[DEBUG] CAPEX total: {total_capex:,.0f} €")
+        battery_cycles = 0
+        if "cycles_equivalent" in battery_df.columns:
+            battery_cycles = float(battery_df["cycles_equivalent"].iloc[0])
+
+        print(f"[DEBUG] Total CAPEX: {total_capex:,.0f} €")
         print(f"[DEBUG] Annual savings: {annual_savings:,.0f} €")
 
-        # -----------------------------
-        # FINANCE
-        # -----------------------------
-        payback_val = simple_payback(total_capex, annual_savings)
-        npv_val = npv(total_capex, annual_savings, years, discount)
-        co2_val = co2_saved(annual_pv_mwh)
-        lcoe_val = lcoe(solar_capex, annual_pv_mwh, degradation, years)
+        # ---------------------------
+        # CALCULATIONS
+        # ---------------------------
+        payback_years = simple_payback(total_capex, annual_savings)
+        npv_value = npv(total_capex, annual_savings, years, discount_rate)
+        lcoe_value = lcoe(solar_capex, annual_pv_mwh, degradation, years)
+        co2_value = co2_saved(annual_pv_mwh)
 
-        battery_cycles = 0
-        if "cycles_equivalent" in bat_df.columns:
-            battery_cycles = float(bat_df["cycles_equivalent"].iloc[0])
-
-        eval_dict = {
+        # ---------------------------
+        # SAVE OUTPUT
+        # ---------------------------
+        result_dict = {
             "total_capex_eur": total_capex,
             "solar_capex_eur": solar_capex,
             "battery_capex_eur": battery_capex,
             "annual_savings_eur": annual_savings,
-            "simple_payback_years": payback_val,
-            "npv_eur": npv_val,
-            "solar_lcoe_eur_per_mwh": lcoe_val,
-            "annual_co2_saved_ton": co2_val,
+            "simple_payback_years": payback_years,
+            "npv_eur": npv_value,
+            "solar_lcoe_eur_per_mwh": lcoe_value,
+            "annual_co2_saved_ton": co2_value,
             "battery_cycles_est": battery_cycles
         }
 
-        out_path = Path(self.results_path) / "investment_eval.csv"
-        pd.DataFrame([eval_dict]).to_csv(out_path, index=False)
+        out_path = Path(self.results_path) / "investment_evaluation.csv"
+        pd.DataFrame([result_dict]).to_csv(out_path, index=False)
 
-        print("\n[SUCCESS] INVESTMENT EVALUATION COMPLETE")
-        print(eval_dict)
+        print("\n[SUCCESS] ===== INVESTMENT COMPLETE =====")
+        print(result_dict)
 
         return OutputModel(
             message="Investment evaluation finished",
