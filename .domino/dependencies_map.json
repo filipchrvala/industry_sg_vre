@@ -5,15 +5,27 @@
             "requirements_file": "requirements_0.txt"
         },
         "pieces": [
-            "PredictPiece",
             "TrainModelPiece",
             "PreprocessEnergyDataPiece",
-            "SimulatePiece",
+            "KPIPiece",
             "FetchEnergyDataPiece",
             "InvestmentEvalPiece",
-            "KPIPiece"
+            "PredictPiece",
+            "SimulatePiece"
         ],
         "secrets": [],
-        "source_image": "ghcr.io/filipchrvala/industry_sg_vre:0.1.52-group0"
+        "source_image": "ghcr.io/filipchrvala/industry_sg_vre:0.1.54-group0"
+    },
+    "group1": {
+        "dependency": {
+            "dockerfile": null,
+            "requirements_file": null
+        },
+        "pieces": [
+            "SolarSimPiece",
+            "BatterySimPiece"
+        ],
+        "secrets": [],
+        "source_image": "ghcr.io/filipchrvala/industry_sg_vre:0.1.54-group1"
     }
 }

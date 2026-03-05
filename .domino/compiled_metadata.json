@@ -1,66 +1,4 @@
 {
-    "PredictPiece": {
-        "name": "PredictPiece",
-        "dependency": {
-            "dockerfile": null,
-            "requirements_file": "requirements_0.txt"
-        },
-        "tags": [],
-        "style": {
-            "node_label": "Predict Energy Load",
-            "node_type": "default",
-            "node_style": {
-                "backgroundColor": "#ebebeb"
-            },
-            "useIcon": true,
-            "icon_class_name": "fa-solid:chart-line",
-            "iconStyle": {
-                "cursor": "pointer"
-            }
-        },
-        "description": "Run prediction using trained XGBoost model",
-        "dependencies_group": "0",
-        "input_schema": {
-            "properties": {
-                "model_path": {
-                    "description": "Path to trained XGBoost model",
-                    "title": "Model Path",
-                    "type": "string"
-                },
-                "data_path": {
-                    "description": "Path to prediction dataset (15min)",
-                    "title": "Data Path",
-                    "type": "string"
-                }
-            },
-            "required": [
-                "model_path",
-                "data_path"
-            ],
-            "title": "InputModel",
-            "type": "object"
-        },
-        "output_schema": {
-            "properties": {
-                "message": {
-                    "title": "Message",
-                    "type": "string"
-                },
-                "prediction_file_path": {
-                    "title": "Prediction File Path",
-                    "type": "string"
-                }
-            },
-            "required": [
-                "message",
-                "prediction_file_path"
-            ],
-            "title": "OutputModel",
-            "type": "object"
-        },
-        "secrets_schema": null,
-        "source_url": "https://github.com/filipchrvala/industry_sg_vre/tree/main/pieces/PredictPiece"
-    },
     "TrainModelPiece": {
         "name": "TrainModelPiece",
         "dependency": {
@@ -219,231 +157,6 @@
         "secrets_schema": null,
         "source_url": "https://github.com/filipchrvala/industry_sg_vre/tree/main/pieces/PreprocessEnergyDataPiece"
     },
-    "SimulatePiece": {
-        "name": "SimulatePiece",
-        "dependency": {
-            "dockerfile": null,
-            "requirements_file": "requirements_0.txt"
-        },
-        "tags": [],
-        "style": {
-            "node_label": "Simulate Energy Scenario",
-            "node_type": "default",
-            "node_style": {
-                "backgroundColor": "#ebebeb"
-            },
-            "useIcon": true,
-            "icon_class_name": "fa-solid:calculator",
-            "iconStyle": {
-                "cursor": "pointer"
-            }
-        },
-        "description": "Energy simulation with solar and battery",
-        "dependencies_group": "0",
-        "input_schema": {
-            "properties": {
-                "forecast_csv": {
-                    "description": "Path to predictions_15min.csv from PredictPiece",
-                    "title": "Forecast Csv",
-                    "type": "string"
-                },
-                "virtual_solar_csv": {
-                    "default": "",
-                    "description": "Path to virtual_solar.csv",
-                    "title": "Virtual Solar Csv",
-                    "type": "string"
-                },
-                "virtual_battery_soc_csv": {
-                    "default": "",
-                    "description": "Path to virtual_battery_soc.csv",
-                    "title": "Virtual Battery Soc Csv",
-                    "type": "string"
-                },
-                "scenario_yml": {
-                    "description": "Path to scenario yaml file",
-                    "title": "Scenario Yml",
-                    "type": "string"
-                }
-            },
-            "required": [
-                "forecast_csv",
-                "scenario_yml"
-            ],
-            "title": "InputModel",
-            "type": "object"
-        },
-        "output_schema": {
-            "properties": {
-                "message": {
-                    "title": "Message",
-                    "type": "string"
-                },
-                "simulated_load_csv": {
-                    "title": "Simulated Load Csv",
-                    "type": "string"
-                },
-                "scenario_summary_csv": {
-                    "title": "Scenario Summary Csv",
-                    "type": "string"
-                }
-            },
-            "required": [
-                "message",
-                "simulated_load_csv",
-                "scenario_summary_csv"
-            ],
-            "title": "OutputModel",
-            "type": "object"
-        },
-        "secrets_schema": null,
-        "source_url": "https://github.com/filipchrvala/industry_sg_vre/tree/main/pieces/SimulatePiece"
-    },
-    "FetchEnergyDataPiece": {
-        "name": "FetchEnergyDataPiece",
-        "dependency": {
-            "dockerfile": null,
-            "requirements_file": "requirements_0.txt"
-        },
-        "tags": [
-            "Energy"
-        ],
-        "style": {
-            "node_label": "Fetch Energy Data Piece",
-            "node_type": "default",
-            "node_style": {
-                "backgroundColor": "#ebebeb"
-            },
-            "useIcon": true,
-            "icon_class_name": "fa-solid:bolt",
-            "iconStyle": {
-                "cursor": "pointer"
-            }
-        },
-        "description": "Load and merge energy CSV files",
-        "dependencies_group": "0",
-        "container_resources": {
-            "requests": {
-                "cpu": 100,
-                "memory": 128
-            },
-            "limits": {
-                "cpu": 500,
-                "memory": 512
-            }
-        },
-        "input_schema": {
-            "description": "Input model for Fetch Energy Data Piece",
-            "properties": {
-                "load_csv": {
-                    "default": "/home/shared_storage/load.csv",
-                    "description": "Path to load CSV file",
-                    "title": "Load Csv",
-                    "type": "string"
-                },
-                "production_csv": {
-                    "default": "/home/shared_storage/production.csv",
-                    "description": "Path to production CSV file",
-                    "title": "Production Csv",
-                    "type": "string"
-                },
-                "prices_csv": {
-                    "default": "/home/shared_storage/prices.csv",
-                    "description": "Path to prices CSV file",
-                    "title": "Prices Csv",
-                    "type": "string"
-                }
-            },
-            "title": "InputModel",
-            "type": "object"
-        },
-        "output_schema": {
-            "description": "Output model for Fetch Energy Data Piece",
-            "properties": {
-                "message": {
-                    "default": "",
-                    "title": "Message",
-                    "type": "string"
-                },
-                "output_path": {
-                    "default": "",
-                    "title": "Output Path",
-                    "type": "string"
-                }
-            },
-            "title": "OutputModel",
-            "type": "object"
-        },
-        "secrets_schema": null,
-        "source_url": "https://github.com/filipchrvala/industry_sg_vre/tree/main/pieces/FetchEnergyDataPiece"
-    },
-    "InvestmentEvalPiece": {
-        "name": "InvestmentEvalPiece",
-        "dependency": {
-            "dockerfile": null,
-            "requirements_file": "requirements_0.txt"
-        },
-        "tags": [],
-        "style": {
-            "node_label": "Investment Evaluation",
-            "node_type": "default",
-            "node_style": {
-                "backgroundColor": "#ebebeb"
-            },
-            "useIcon": true,
-            "icon_class_name": "fa-solid:chart-line",
-            "iconStyle": {
-                "cursor": "pointer"
-            }
-        },
-        "description": "Evaluates solar & battery investment: payback, NPV, LCOE, CO2",
-        "dependencies_group": "0",
-        "input_schema": {
-            "properties": {
-                "kpi_results_csv": {
-                    "description": "From KPIPiece",
-                    "title": "Kpi Results Csv",
-                    "type": "string"
-                },
-                "battery_summary_csv": {
-                    "default": "/home/shared_storage/battery_summary_TEST.csv",
-                    "description": "Battery summary csv",
-                    "title": "Battery Summary Csv",
-                    "type": "string"
-                },
-                "investment_config_yml": {
-                    "default": "/home/shared_storage/investment_config.yml",
-                    "description": "Investment config yaml",
-                    "title": "Investment Config Yml",
-                    "type": "string"
-                }
-            },
-            "required": [
-                "kpi_results_csv"
-            ],
-            "title": "InputModel",
-            "type": "object"
-        },
-        "output_schema": {
-            "properties": {
-                "message": {
-                    "title": "Message",
-                    "type": "string"
-                },
-                "investment_evaluation_json": {
-                    "title": "Investment Evaluation Json",
-                    "type": "string"
-                }
-            },
-            "required": [
-                "message",
-                "investment_evaluation_json"
-            ],
-            "title": "OutputModel",
-            "type": "object"
-        },
-        "secrets_schema": null,
-        "source_url": "https://github.com/filipchrvala/industry_sg_vre/tree/main/pieces/InvestmentEvalPiece"
-    },
     "KPIPiece": {
         "name": "KPIPiece",
         "dependency": {
@@ -523,5 +236,492 @@
         },
         "secrets_schema": null,
         "source_url": "https://github.com/filipchrvala/industry_sg_vre/tree/main/pieces/KPIPiece"
+    },
+    "FetchEnergyDataPiece": {
+        "name": "FetchEnergyDataPiece",
+        "dependency": {
+            "dockerfile": null,
+            "requirements_file": "requirements_0.txt"
+        },
+        "tags": [
+            "Energy"
+        ],
+        "style": {
+            "node_label": "Fetch Energy Data Piece",
+            "node_type": "default",
+            "node_style": {
+                "backgroundColor": "#ebebeb"
+            },
+            "useIcon": true,
+            "icon_class_name": "fa-solid:bolt",
+            "iconStyle": {
+                "cursor": "pointer"
+            }
+        },
+        "description": "Load and merge energy CSV files",
+        "dependencies_group": "0",
+        "container_resources": {
+            "requests": {
+                "cpu": 100,
+                "memory": 128
+            },
+            "limits": {
+                "cpu": 500,
+                "memory": 512
+            }
+        },
+        "input_schema": {
+            "description": "Input model for Fetch Energy Data Piece",
+            "properties": {
+                "load_csv": {
+                    "default": "/home/shared_storage/load.csv",
+                    "description": "Path to load CSV file",
+                    "title": "Load Csv",
+                    "type": "string"
+                },
+                "production_csv": {
+                    "default": "/home/shared_storage/production.csv",
+                    "description": "Path to production CSV file",
+                    "title": "Production Csv",
+                    "type": "string"
+                },
+                "prices_csv": {
+                    "default": "/home/shared_storage/prices.csv",
+                    "description": "Path to prices CSV file",
+                    "title": "Prices Csv",
+                    "type": "string"
+                }
+            },
+            "title": "InputModel",
+            "type": "object"
+        },
+        "output_schema": {
+            "description": "Output model for Fetch Energy Data Piece",
+            "properties": {
+                "message": {
+                    "default": "",
+                    "title": "Message",
+                    "type": "string"
+                },
+                "output_path": {
+                    "default": "",
+                    "title": "Output Path",
+                    "type": "string"
+                }
+            },
+            "title": "OutputModel",
+            "type": "object"
+        },
+        "secrets_schema": null,
+        "source_url": "https://github.com/filipchrvala/industry_sg_vre/tree/main/pieces/FetchEnergyDataPiece"
+    },
+    "SolarSimPiece": {
+        "name": "SolarSimPiece",
+        "dependency": {
+            "dockerfile": null,
+            "requirements_file": null
+        },
+        "tags": [],
+        "style": {
+            "node_label": "Piece",
+            "node_type": "default",
+            "node_style": {
+                "backgroundColor": "#ebebeb"
+            },
+            "useIcon": true,
+            "icon_class_name": "fa-solid fa-circle",
+            "iconStyle": {
+                "cursor": "pointer"
+            }
+        },
+        "description": "Generates synthetic solar PV profile using pvlib and weather data",
+        "version": "1.0.0",
+        "inputs": [
+            {
+                "name": "weather_csv",
+                "type": "file",
+                "description": "Weather CSV with irradiance & temp"
+            },
+            {
+                "name": "solar_config_yml",
+                "type": "file",
+                "description": "PV configuration (capacity, tilt, etc.)"
+            }
+        ],
+        "outputs": [
+            {
+                "name": "virtual_solar_csv",
+                "type": "file",
+                "description": "15-min solar generation (kW)"
+            }
+        ],
+        "input_schema": {
+            "description": "SolarSimPiece Input Model",
+            "properties": {
+                "input_weather_data": {
+                    "default": "weather.csv",
+                    "description": "CSV file containing weather data with columns: datetime, ghi, dni, dhi, temp_air, wind_speed)",
+                    "title": "Path to weather data CSV",
+                    "type": "string"
+                },
+                "input_Virtual_RE_config": {
+                    "default": "solar_config.yml",
+                    "description": "YAML file containing configuration for virtual solar generation.",
+                    "title": "Path to virtual RE configuration file solar_config.yml",
+                    "type": "string"
+                },
+                "output_path": {
+                    "default": "virtual_solar.csv",
+                    "description": "Path to generated virtual solar data CSV file.",
+                    "title": "Virtual solar CSV output path",
+                    "type": "string"
+                }
+            },
+            "title": "InputModel",
+            "type": "object"
+        },
+        "output_schema": {
+            "description": "SolarSimPiece Output Model",
+            "properties": {
+                "output_path": {
+                    "description": "Path to generated virtual solar data CSV file.",
+                    "title": "Virtual solar CSV output path",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "output_path"
+            ],
+            "title": "OutputModel",
+            "type": "object"
+        },
+        "secrets_schema": null,
+        "source_url": "https://github.com/filipchrvala/industry_sg_vre/tree/main/pieces/SolarSimPiece"
+    },
+    "BatterySimPiece": {
+        "name": "BatterySimPiece",
+        "dependency": {
+            "dockerfile": null,
+            "requirements_file": null
+        },
+        "tags": [],
+        "style": {
+            "node_label": "Piece",
+            "node_type": "default",
+            "node_style": {
+                "backgroundColor": "#ebebeb"
+            },
+            "useIcon": true,
+            "icon_class_name": "fa-solid fa-circle",
+            "iconStyle": {
+                "cursor": "pointer"
+            }
+        },
+        "description": "Simulates battery charge/discharge, self-consumption, peak-shaving",
+        "version": "1.0.0",
+        "inputs": [
+            {
+                "name": "net_load_csv",
+                "type": "file",
+                "description": "15-min net load after solar (kW)"
+            },
+            {
+                "name": "battery_config_yml",
+                "type": "file",
+                "description": "Battery specs & strategy"
+            },
+            {
+                "name": "scenario_yml",
+                "type": "file",
+                "description": "Scenario definition (peak hours, etc.)"
+            }
+        ],
+        "outputs": [
+            {
+                "name": "virtual_battery_soc_csv",
+                "type": "file",
+                "description": "15-min SOC (%)"
+            },
+            {
+                "name": "battery_summary_csv",
+                "type": "file",
+                "description": "Cycles, peak-shaved energy, etc."
+            }
+        ],
+        "input_schema": {
+            "description": "BatterySimPiece Input Model",
+            "properties": {
+                "input_load_data": {
+                    "default": "virtual_solar.csv",
+                    "description": "CSV file containing virtual solar generation data with columns: datetime, solar_kw)",
+                    "title": "Path to virtual solar energy generation CSV",
+                    "type": "string"
+                },
+                "input_Battery_config": {
+                    "default": "battery_config.yml",
+                    "description": "YAML file containing configuration for battery simulation.",
+                    "title": "Path to battery configuration file battery_config.yml",
+                    "type": "string"
+                },
+                "input_forecast": {
+                    "default": "forecast.csv",
+                    "description": "CSV file containing net load forecast data with columns: datetime, load_mw, production_ton, price_eur_mwh, prediction_load_mw",
+                    "title": "Path to net load forecast CSV",
+                    "type": "string"
+                },
+                "input_scenario": {
+                    "default": "scenario.yml",
+                    "description": "YAML file containing scenario configuration with battery operation strategy.",
+                    "title": "Path to battery scenario configuration file scenario.yml",
+                    "type": "string"
+                },
+                "output_path": {
+                    "default": "virtual_battery_soc.csv",
+                    "description": "Path to generated battery simulation data CSV file.",
+                    "title": "Battery simulation CSV output path",
+                    "type": "string"
+                }
+            },
+            "title": "InputModel",
+            "type": "object"
+        },
+        "output_schema": {
+            "description": "BatterySimPiece Output Model",
+            "properties": {
+                "output_path": {
+                    "default": "",
+                    "description": "Path to the generated virtual_battery_soc.csv file.",
+                    "title": "Path to SOC CSV",
+                    "type": "string"
+                },
+                "summary_csv_path": {
+                    "default": "",
+                    "description": "Path to battery_summary.csv (capacity_kWh, cycles_equivalent, energy_throughput_MWh) for InvestmentEvalPiece.",
+                    "title": "Path to battery summary CSV",
+                    "type": "string"
+                },
+                "summary": {
+                    "description": "Summary of battery simulation results (text).",
+                    "title": "Results summary",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "summary"
+            ],
+            "title": "OutputModel",
+            "type": "object"
+        },
+        "secrets_schema": null,
+        "source_url": "https://github.com/filipchrvala/industry_sg_vre/tree/main/pieces/BatterySimPiece"
+    },
+    "InvestmentEvalPiece": {
+        "name": "InvestmentEvalPiece",
+        "dependency": {
+            "dockerfile": null,
+            "requirements_file": "requirements_0.txt"
+        },
+        "tags": [],
+        "style": {
+            "node_label": "Investment Evaluation",
+            "node_type": "default",
+            "node_style": {
+                "backgroundColor": "#ebebeb"
+            },
+            "useIcon": true,
+            "icon_class_name": "fa-solid:chart-line",
+            "iconStyle": {
+                "cursor": "pointer"
+            }
+        },
+        "description": "Evaluates solar & battery investment: payback, NPV, LCOE, CO2",
+        "dependencies_group": "0",
+        "input_schema": {
+            "properties": {
+                "kpi_results_csv": {
+                    "description": "From KPIPiece",
+                    "title": "Kpi Results Csv",
+                    "type": "string"
+                },
+                "battery_summary_csv": {
+                    "default": "/home/shared_storage/battery_summary_TEST.csv",
+                    "description": "Battery summary csv",
+                    "title": "Battery Summary Csv",
+                    "type": "string"
+                },
+                "investment_config_yml": {
+                    "default": "/home/shared_storage/investment_config.yml",
+                    "description": "Investment config yaml",
+                    "title": "Investment Config Yml",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "kpi_results_csv"
+            ],
+            "title": "InputModel",
+            "type": "object"
+        },
+        "output_schema": {
+            "properties": {
+                "message": {
+                    "title": "Message",
+                    "type": "string"
+                },
+                "investment_evaluation_json": {
+                    "title": "Investment Evaluation Json",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "message",
+                "investment_evaluation_json"
+            ],
+            "title": "OutputModel",
+            "type": "object"
+        },
+        "secrets_schema": null,
+        "source_url": "https://github.com/filipchrvala/industry_sg_vre/tree/main/pieces/InvestmentEvalPiece"
+    },
+    "PredictPiece": {
+        "name": "PredictPiece",
+        "dependency": {
+            "dockerfile": null,
+            "requirements_file": "requirements_0.txt"
+        },
+        "tags": [],
+        "style": {
+            "node_label": "Predict Energy Load",
+            "node_type": "default",
+            "node_style": {
+                "backgroundColor": "#ebebeb"
+            },
+            "useIcon": true,
+            "icon_class_name": "fa-solid:chart-line",
+            "iconStyle": {
+                "cursor": "pointer"
+            }
+        },
+        "description": "Run prediction using trained XGBoost model",
+        "dependencies_group": "0",
+        "input_schema": {
+            "properties": {
+                "model_path": {
+                    "description": "Path to trained XGBoost model",
+                    "title": "Model Path",
+                    "type": "string"
+                },
+                "data_path": {
+                    "description": "Path to prediction dataset (15min)",
+                    "title": "Data Path",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "model_path",
+                "data_path"
+            ],
+            "title": "InputModel",
+            "type": "object"
+        },
+        "output_schema": {
+            "properties": {
+                "message": {
+                    "title": "Message",
+                    "type": "string"
+                },
+                "prediction_file_path": {
+                    "title": "Prediction File Path",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "message",
+                "prediction_file_path"
+            ],
+            "title": "OutputModel",
+            "type": "object"
+        },
+        "secrets_schema": null,
+        "source_url": "https://github.com/filipchrvala/industry_sg_vre/tree/main/pieces/PredictPiece"
+    },
+    "SimulatePiece": {
+        "name": "SimulatePiece",
+        "dependency": {
+            "dockerfile": null,
+            "requirements_file": "requirements_0.txt"
+        },
+        "tags": [],
+        "style": {
+            "node_label": "Simulate Energy Scenario",
+            "node_type": "default",
+            "node_style": {
+                "backgroundColor": "#ebebeb"
+            },
+            "useIcon": true,
+            "icon_class_name": "fa-solid:calculator",
+            "iconStyle": {
+                "cursor": "pointer"
+            }
+        },
+        "description": "Energy simulation with solar and battery",
+        "dependencies_group": "0",
+        "input_schema": {
+            "properties": {
+                "forecast_csv": {
+                    "description": "Path to predictions_15min.csv from PredictPiece",
+                    "title": "Forecast Csv",
+                    "type": "string"
+                },
+                "virtual_solar_csv": {
+                    "default": "",
+                    "description": "Path to virtual_solar.csv",
+                    "title": "Virtual Solar Csv",
+                    "type": "string"
+                },
+                "virtual_battery_soc_csv": {
+                    "default": "",
+                    "description": "Path to virtual_battery_soc.csv",
+                    "title": "Virtual Battery Soc Csv",
+                    "type": "string"
+                },
+                "scenario_yml": {
+                    "description": "Path to scenario yaml file",
+                    "title": "Scenario Yml",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "forecast_csv",
+                "scenario_yml"
+            ],
+            "title": "InputModel",
+            "type": "object"
+        },
+        "output_schema": {
+            "properties": {
+                "message": {
+                    "title": "Message",
+                    "type": "string"
+                },
+                "simulated_load_csv": {
+                    "title": "Simulated Load Csv",
+                    "type": "string"
+                },
+                "scenario_summary_csv": {
+                    "title": "Scenario Summary Csv",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "message",
+                "simulated_load_csv",
+                "scenario_summary_csv"
+            ],
+            "title": "OutputModel",
+            "type": "object"
+        },
+        "secrets_schema": null,
+        "source_url": "https://github.com/filipchrvala/industry_sg_vre/tree/main/pieces/SimulatePiece"
     }
 }
