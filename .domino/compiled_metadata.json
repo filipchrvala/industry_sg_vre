@@ -352,21 +352,15 @@
             "description": "SolarSimPiece Input Model",
             "properties": {
                 "input_weather_data": {
-                    "default": "weather.csv",
-                    "description": "CSV file containing weather data with columns: datetime, ghi, dni, dhi, temp_air, wind_speed)",
+                    "default": "/home/shared_storage/SolarGIS.csv",
+                    "description": "CSV file containing weather data (Solargis or columns: datetime, ghi, dni, dhi, temp_air, wind_speed)",
                     "title": "Path to weather data CSV",
                     "type": "string"
                 },
                 "input_Virtual_RE_config": {
-                    "default": "solar_config.yml",
+                    "default": "/home/shared_storage/solar_config.yml",
                     "description": "YAML file containing configuration for virtual solar generation.",
                     "title": "Path to virtual RE configuration file solar_config.yml",
-                    "type": "string"
-                },
-                "output_path": {
-                    "default": "virtual_solar.csv",
-                    "description": "Path to generated virtual solar data CSV file.",
-                    "title": "Virtual solar CSV output path",
                     "type": "string"
                 }
             },
@@ -434,27 +428,21 @@
                     "type": "string"
                 },
                 "input_Battery_config": {
-                    "default": "battery_config.yml",
+                    "default": "/home/shared_storage/battery_config.yml",
                     "description": "YAML file containing configuration for battery simulation.",
                     "title": "Path to battery configuration file battery_config.yml",
                     "type": "string"
                 },
                 "input_forecast": {
                     "default": "forecast.csv",
-                    "description": "CSV file containing net load forecast data with columns: datetime, load_mw, production_ton, price_eur_mwh, prediction_load_mw",
+                    "description": "CSV file containing net load forecast data with columns: datetime, prediction_load_kw, ...",
                     "title": "Path to net load forecast CSV",
                     "type": "string"
                 },
                 "input_scenario": {
-                    "default": "scenario.yml",
+                    "default": "/home/shared_storage/scenario.yml",
                     "description": "YAML file containing scenario configuration with battery operation strategy.",
                     "title": "Path to battery scenario configuration file scenario.yml",
-                    "type": "string"
-                },
-                "output_path": {
-                    "default": "virtual_battery_soc.csv",
-                    "description": "Path to generated battery simulation data CSV file.",
-                    "title": "Battery simulation CSV output path",
                     "type": "string"
                 }
             },
