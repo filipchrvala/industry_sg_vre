@@ -319,42 +319,35 @@
         "name": "SolarSimPiece",
         "dependency": {
             "dockerfile": null,
-            "requirements_file": null
+            "requirements_file": "requirements_0.txt"
         },
-        "tags": [],
+        "tags": [
+            "Energy"
+        ],
         "style": {
-            "node_label": "Piece",
+            "node_label": "SolarSimPiece",
             "node_type": "default",
             "node_style": {
                 "backgroundColor": "#ebebeb"
             },
             "useIcon": true,
-            "icon_class_name": "fa-solid fa-circle",
+            "icon_class_name": "fa-solid:solar-panel",
             "iconStyle": {
                 "cursor": "pointer"
             }
         },
         "description": "Generates synthetic solar PV profile using pvlib and weather data",
-        "version": "1.0.0",
-        "inputs": [
-            {
-                "name": "weather_csv",
-                "type": "file",
-                "description": "Weather CSV with irradiance & temp"
+        "dependencies_group": "0",
+        "container_resources": {
+            "requests": {
+                "cpu": 100,
+                "memory": 128
             },
-            {
-                "name": "solar_config_yml",
-                "type": "file",
-                "description": "PV configuration (capacity, tilt, etc.)"
+            "limits": {
+                "cpu": 500,
+                "memory": 512
             }
-        ],
-        "outputs": [
-            {
-                "name": "virtual_solar_csv",
-                "type": "file",
-                "description": "15-min solar generation (kW)"
-            }
-        ],
+        },
         "input_schema": {
             "description": "SolarSimPiece Input Model",
             "properties": {
@@ -402,52 +395,35 @@
         "name": "BatterySimPiece",
         "dependency": {
             "dockerfile": null,
-            "requirements_file": null
+            "requirements_file": "requirements_0.txt"
         },
-        "tags": [],
+        "tags": [
+            "Energy"
+        ],
         "style": {
-            "node_label": "Piece",
+            "node_label": "BatterySimPiece",
             "node_type": "default",
             "node_style": {
                 "backgroundColor": "#ebebeb"
             },
             "useIcon": true,
-            "icon_class_name": "fa-solid fa-circle",
+            "icon_class_name": "fa-solid:battery-full",
             "iconStyle": {
                 "cursor": "pointer"
             }
         },
         "description": "Simulates battery charge/discharge, self-consumption, peak-shaving",
-        "version": "1.0.0",
-        "inputs": [
-            {
-                "name": "net_load_csv",
-                "type": "file",
-                "description": "15-min net load after solar (kW)"
+        "dependencies_group": "0",
+        "container_resources": {
+            "requests": {
+                "cpu": 100,
+                "memory": 128
             },
-            {
-                "name": "battery_config_yml",
-                "type": "file",
-                "description": "Battery specs & strategy"
-            },
-            {
-                "name": "scenario_yml",
-                "type": "file",
-                "description": "Scenario definition (peak hours, etc.)"
+            "limits": {
+                "cpu": 500,
+                "memory": 512
             }
-        ],
-        "outputs": [
-            {
-                "name": "virtual_battery_soc_csv",
-                "type": "file",
-                "description": "15-min SOC (%)"
-            },
-            {
-                "name": "battery_summary_csv",
-                "type": "file",
-                "description": "Cycles, peak-shaved energy, etc."
-            }
-        ],
+        },
         "input_schema": {
             "description": "BatterySimPiece Input Model",
             "properties": {

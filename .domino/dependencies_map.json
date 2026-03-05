@@ -9,23 +9,13 @@
             "PreprocessEnergyDataPiece",
             "KPIPiece",
             "FetchEnergyDataPiece",
+            "SolarSimPiece",
+            "BatterySimPiece",
             "InvestmentEvalPiece",
             "PredictPiece",
             "SimulatePiece"
         ],
         "secrets": [],
-        "source_image": "ghcr.io/filipchrvala/industry_sg_vre:0.1.54-group0"
-    },
-    "group1": {
-        "dependency": {
-            "dockerfile": null,
-            "requirements_file": null
-        },
-        "pieces": [
-            "SolarSimPiece",
-            "BatterySimPiece"
-        ],
-        "secrets": [],
-        "source_image": "ghcr.io/filipchrvala/industry_sg_vre:0.1.54-group1"
+        "source_image": "ghcr.io/filipchrvala/industry_sg_vre:0.1.55-group0"
     }
 }
