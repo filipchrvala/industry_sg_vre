@@ -428,6 +428,19 @@
                     "description": "KPIPiece output: kpi_results.csv.",
                     "title": "Kpi Results Csv"
                 },
+                "virtual_battery_soc_csv": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": "/home/shared_storage/virtual_battery_soc.csv",
+                    "description": "BatterySimPiece output: virtual_battery_soc.csv (for Battery SoC timeline).",
+                    "title": "Virtual Battery Soc Csv"
+                },
                 "investment_evaluation_csv": {
                     "anyOf": [
                         {
@@ -440,6 +453,19 @@
                     "default": "/home/shared_storage/investment_evaluation.csv",
                     "description": "InvestmentEvalPiece output: investment_evaluation.csv.",
                     "title": "Investment Evaluation Csv"
+                },
+                "scenario_yml": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": "/home/shared_storage/scenario.yml",
+                    "description": "Optional scenario YAML (solar capacity_kWp, battery capacity_kWh) for display in dashboard.",
+                    "title": "Scenario Yml"
                 }
             },
             "title": "InputModel",
